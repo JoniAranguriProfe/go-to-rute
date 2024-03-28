@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4100AD"
+    android:background="@drawable/login_background"
     android:padding="24dp"
     tools:context=".LoginActivity">
 
@@ -13,7 +13,7 @@
         android:id="@+id/company_icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/ic_launcher_foreground"
+        android:src="@drawable/educacionit_logo"
         app:layout_constraintBottom_toTopOf="@+id/company_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -24,6 +24,7 @@
         android:id="@+id/company_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginBottom="8dp"
         android:minLines="3"
         android:text="GoToRute \nby \nEducacionIT"
@@ -63,7 +64,8 @@
             android:id="@+id/text_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#5D21BE"
+            android:background="@drawable/shape_drawable"
+            android:backgroundTint="#5D21BE"
             android:textColor="@android:color/white" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -97,7 +99,8 @@
             android:id="@+id/text_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#5D21BE"
+            android:background="@drawable/shape_drawable"
+            android:backgroundTint="#5D21BE"
             android:inputType="textPassword"
             android:textColor="@android:color/white" />
 
@@ -125,13 +128,15 @@
         app:layout_constraintStart_toEndOf="@+id/check_remember_me"
         app:layout_constraintTop_toTopOf="@+id/check_remember_me" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sign_in_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#F4F8FF"
+        android:background="@drawable/shape_drawable"
+        android:backgroundTint="#F4F8FF"
         android:text="Sign in"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -145,7 +150,6 @@
         android:paddingBottom="16dp"
         android:text="Don't have an account?"
         android:textAlignment="center"
-        android:textColor="@android:color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/sign_up_facebook"
@@ -155,13 +159,15 @@
         app:layout_constraintVertical_bias="1"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sign_up_facebook"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:background="#F5F5F5"
+        android:background="@drawable/shape_drawable"
+        android:backgroundTint="#F5F5F5"
         android:text="Facebook"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toTopOf="@+id/sign_up_email"
         app:layout_constraintEnd_toStartOf="@id/sign_up_google"
         app:layout_constraintHorizontal_bias="0.5"
@@ -169,13 +175,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label_no_account" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sign_up_google"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:background="#F5F5F5"
+        android:background="@drawable/shape_drawable"
+        android:backgroundTint="#F5F5F5"
         android:text="Google"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toTopOf="@+id/sign_up_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -184,21 +192,21 @@
         app:layout_constraintVertical_bias="0"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sign_up_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-
-        android:background="#2C203D"
+        android:background="@drawable/shape_drawable"
         android:text="Sign up with email"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_up_facebook"
         app:layout_constraintVertical_chainStyle="packed" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
