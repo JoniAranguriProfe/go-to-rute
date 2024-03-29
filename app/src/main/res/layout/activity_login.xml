@@ -93,7 +93,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label_password">
+        app:layout_constraintTop_toBottomOf="@+id/label_password"
+        app:passwordToggleDrawable="@drawable/ic_eye_selector"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="#bbbbbb">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_password"
