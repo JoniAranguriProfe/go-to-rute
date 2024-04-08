@@ -32,7 +32,7 @@ class LoginPresenter(private val loginModel: LoginContract.LoginModel) :
     }
 
     private fun checkSession(context: Context?) = context?.let {
-        !PreferenceManager.getDefaultSharedPreferences(context)
+        PreferenceManager.getDefaultSharedPreferences(context)
             .getBoolean(FAKE_LOGIN_PREFERENCES_KEY, false)
     } ?: false
 
