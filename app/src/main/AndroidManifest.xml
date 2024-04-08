@@ -13,7 +13,10 @@
         android:theme="@style/Theme.GoToRute"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity"
+            android:name=".home.view.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".login.view.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
