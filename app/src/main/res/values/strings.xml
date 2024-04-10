@@ -3,4 +3,6 @@
     <string name="my_routes_title">My Routes</string>
     <string name="navigate_title">Navigate</string>
     <string name="profile_title">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
