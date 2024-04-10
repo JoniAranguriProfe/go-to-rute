@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
+        android:backgroundTint="@color/white"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
@@ -20,6 +21,14 @@
             style="@style/CustomBottomSheetDragHandleView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <com.educacionit.gotorute.ui.components.CustomSearchView
+            android:id="@+id/places_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_places_message"
+            app:defaultMarginsEnabled="false"
+            />
 
     </LinearLayout>
 
