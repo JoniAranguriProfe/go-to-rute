@@ -56,6 +56,7 @@ class HomeActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        bottomNavigationView.selectedItemId =  R.id.menu_navigate
     }
 
 
