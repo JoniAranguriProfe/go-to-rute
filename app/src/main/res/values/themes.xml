@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.GoToRute" parent="Base.Theme.GoToRute" />
+
+    <style name="CustomBottomSheetDragHandleView" parent="Widget.Material3.BottomSheet.DragHandle">
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:minHeight">@dimen/bottom_sheet_min_height</item>
+    </style>
+
 </resources>

@@ -33,6 +33,7 @@ class HomeActivity : AppCompatActivity() {
         navigateFragment = NavigateFragment()
         profileFragment = ProfileFragment()
         myRoutesFragment = MyRoutesFragment()
+        loadFragment(navigateFragment)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setOnItemSelectedListener { item ->
