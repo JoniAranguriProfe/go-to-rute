@@ -4,4 +4,5 @@
     <string name="navigate_title">Navigate</string>
     <string name="profile_title">Profile</string>
     <string name="search_places_message">Where do you wan to go?</string>
+    <string name="maps_api_key">AIzaSyA2Yy26_3g5b8ZLr7UGN8H3jEBBjz7dPGE</string>
 </resources>
