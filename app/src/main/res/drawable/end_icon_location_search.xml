@@ -1,0 +1,5 @@
+<!-- drawable/end_icon_location_search.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:drawable="@drawable/location_search"
+      android:end="20dp"/>
+</layer-list>
