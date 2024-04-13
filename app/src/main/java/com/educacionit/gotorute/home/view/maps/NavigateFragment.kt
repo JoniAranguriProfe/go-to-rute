@@ -84,6 +84,7 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
         context?.let { safeContext ->
             MapsManager.addRouteToMap(safeContext, googleMap, route)
             MapsManager.alignMapToRoute(googleMap, route)
+            MapsManager.addMarkerToMap(googleMap, route.last())
         }
     }
 
