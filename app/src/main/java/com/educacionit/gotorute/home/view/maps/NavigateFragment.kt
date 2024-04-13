@@ -1,25 +1,32 @@
 package com.educacionit.gotorute.home.view.maps
 
+import SearchAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.educacionit.gotorute.R
+import com.educacionit.gotorute.contract.BaseContract
+import com.educacionit.gotorute.contract.NavigateContract
+import com.educacionit.gotorute.home.model.maps.NavigateRepository
+import com.educacionit.gotorute.home.model.maps.Place
+import com.educacionit.gotorute.home.presenter.maps.NavigatePresenter
+import com.educacionit.gotorute.maps.MapsManager
 import com.educacionit.gotorute.ui.components.CustomSearchView
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
-class NavigateFragment : Fragment(), OnMapReadyCallback {
+class NavigateFragment : Fragment(), OnMapReadyCallback,
+    NavigateContract.NavigateView<BaseContract.IBaseView> {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
     private lateinit var placesSearchView: CustomSearchView
+    private lateinit var navigatePresenter: NavigateContract.INavigatePresenter<NavigateContract.NavigateView<BaseContract.IBaseView>>
+    private lateinit var googleMap: GoogleMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +41,7 @@ class NavigateFragment : Fragment(), OnMapReadyCallback {
         bottomSheetBehavior.isHideable = false
         bottomSheetBehavior.peekHeight =
             resources.getDimensionPixelSize(R.dimen.bottom_sheet_peek_height)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
         return view
     }
@@ -43,10 +51,23 @@ class NavigateFragment : Fragment(), OnMapReadyCallback {
         placesSearchView.setOnSearchLocationListener(object :
             CustomSearchView.SearchLocationListener {
             override fun performSearch(locationToSearch: String) {
-                showSearchResults(locationToSearch)
+                navigatePresenter.performPlacesSearch(locationToSearch)
             }
         })
+        placesSearchView.setOnPlaceClickListener(object : SearchAdapter.OnPlaceClickListener {
+            override fun onPlaceClick(destinationPlace: Place) {
+                navigatePresenter.getRouteToPlace(destinationPlace)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        })
+        initPresenter()
         configureMap()
+    }
+
+    private fun initPresenter() {
+        val navigateModel = NavigateRepository()
+        navigatePresenter = NavigatePresenter(navigateModel)
+        navigatePresenter.attachView(this)
     }
 
     private fun configureMap() {
@@ -55,29 +76,27 @@ class NavigateFragment : Fragment(), OnMapReadyCallback {
         mapsSupportFragment.getMapAsync(this)
     }
 
-    fun showSearchResults(locationToSearch: String) {
-        placesSearchView.showSearchResults(
-            listOf(
-                locationToSearch,
-                locationToSearch,
-                locationToSearch
-            )
-        )
+    override fun showSearchResults(placeResults: List<Place>) {
+        placesSearchView.showSearchResults(placeResults)
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        val abasto = LatLng(-34.6037283, -58.4125926)
-        googleMap.addMarker(
-            MarkerOptions()
-                .position(abasto)
-                .title("Marker in Abasto")
-        )
-        val cameraPosition = CameraPosition.Builder()
-            .target(abasto) // Sets the center of the map to Mountain View
-            .zoom(17f)            // Sets the zoom
-            .bearing(90f)         // Sets the orientation of the camera to east
-            .tilt(30f)            // Sets the tilt of the camera to 30 degrees
-            .build()
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 10000, null)
+    override fun drawRoute(route: List<LatLng>) {
+        context?.let { safeContext ->
+            MapsManager.addRouteToMap(safeContext, googleMap, route)
+            MapsManager.alignMapToRoute(googleMap, route)
+        }
+    }
+
+    override fun onMapReady(updatedMap: GoogleMap) {
+        googleMap = updatedMap
+
+        val initialFakePoint = LatLng(-34.679437, -58.553777)
+
+        MapsManager.addMarkerToMap(googleMap, initialFakePoint)
+        MapsManager.centerMapIntoLocation(googleMap, initialFakePoint)
+    }
+
+    override fun getParentView(): BaseContract.IBaseView {
+        return activity as BaseContract.IBaseView
     }
 }

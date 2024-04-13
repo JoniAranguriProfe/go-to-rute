@@ -1,5 +1,6 @@
 package com.educacionit.gotorute.ui.components
 
+import SearchAdapter
 import android.content.Context
 import android.util.AttributeSet
 import android.view.KeyEvent
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.educacionit.gotorute.R
+import com.educacionit.gotorute.home.model.maps.Place
 
 
 class CustomSearchView(context: Context, @Nullable attrs: AttributeSet?) :
@@ -48,12 +50,16 @@ class CustomSearchView(context: Context, @Nullable attrs: AttributeSet?) :
         }
     }
 
+    fun setOnPlaceClickListener(onPlaceClickListener: SearchAdapter.OnPlaceClickListener) {
+        searchAdapter.setOnPlaceClickListener(onPlaceClickListener)
+    }
+
     private fun dismissKeyboard(focusedView: View) {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
         imm!!.hideSoftInputFromWindow(focusedView.windowToken, 0)
     }
 
-    fun showSearchResults(results: List<String>?) {
+    fun showSearchResults(results: List<Place>?) {
         searchAdapter.setItems(results ?: emptyList())
     }
 

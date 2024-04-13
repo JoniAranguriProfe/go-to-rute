@@ -10,6 +10,7 @@
         android:id="@+id/input_layout_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
         app:endIconDrawable="@drawable/end_icon_location_search"
         app:endIconMode="custom"
         app:endIconTint="#A2A2A2"
@@ -34,6 +35,5 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_result_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="16dp" />
+        android:layout_height="wrap_content" />
 </LinearLayout>
