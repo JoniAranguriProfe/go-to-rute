@@ -7,6 +7,9 @@ interface BaseContract {
         fun showErrorMessage(message: String)
 
         fun getViewContext(): Context
+
+        fun initPresenter()
+
     }
 
     interface IBasePresenter<T : IBaseView> {

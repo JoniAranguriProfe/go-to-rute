@@ -12,8 +12,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class NavigatePresenter(private val navigateModel: NavigateContract.NavigateModel) :
-    NavigateContract.INavigatePresenter<NavigateContract.NavigateView<BaseContract.IBaseView>> {
+class NavigatePresenterFragment(private val navigateModel: NavigateContract.NavigateModel) :
+    NavigateContract.IFragmentNavigatePresenter<NavigateContract.NavigateView<BaseContract.IBaseView>> {
     private lateinit var navigateView: NavigateContract.NavigateView<BaseContract.IBaseView>
 
     override fun attachView(view: NavigateContract.NavigateView<BaseContract.IBaseView>) {

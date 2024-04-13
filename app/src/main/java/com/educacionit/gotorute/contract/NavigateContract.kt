@@ -10,8 +10,8 @@ interface NavigateContract {
         fun drawRoute(route: List<LatLng>)
     }
 
-    interface INavigatePresenter<T : FragmentBaseContract.IFragmentBaseView<*>> :
-        FragmentBaseContract.IBasePresenter<T> {
+    interface IFragmentNavigatePresenter<T : FragmentBaseContract.IFragmentBaseView<*>> :
+        FragmentBaseContract.IFragmentBasePresenter<T> {
         fun performPlacesSearch(placeToSearch: String)
         fun getRouteToPlace(destinationPlace: Place)
         suspend fun getCurrentPointPosition(): Point
