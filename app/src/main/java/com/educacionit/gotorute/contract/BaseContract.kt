@@ -7,10 +7,13 @@ interface BaseContract {
         fun showErrorMessage(message: String)
 
         fun getViewContext(): Context
+
+        fun initPresenter()
+
     }
 
     interface IBasePresenter<T : IBaseView> {
-        fun attachView(loginView: T)
+        fun attachView(view: T)
     }
 
 }

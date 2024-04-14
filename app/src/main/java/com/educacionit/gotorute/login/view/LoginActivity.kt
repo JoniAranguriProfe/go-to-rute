@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.LoginView {
         }
     }
 
-    private fun initPresenter() {
+    override fun initPresenter() {
         val loginModel = LoginRepository()
         loginPresenter = LoginPresenter(loginModel)
         loginPresenter.attachView(this)

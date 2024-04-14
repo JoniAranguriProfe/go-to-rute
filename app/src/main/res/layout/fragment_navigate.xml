@@ -6,14 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".home.view.maps.NavigateFragment">
 
+    <fragment
+        android:id="@+id/location_maps_fragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".home.view.maps.NavigateFragment" />
+
     <LinearLayout
         android:id="@+id/standard_bottom_sheet"
         style="@style/Widget.Material3.BottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
-        android:backgroundTint="@color/white"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
@@ -27,8 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search_places_message"
-            app:defaultMarginsEnabled="false"
-            />
+            app:defaultMarginsEnabled="false" />
 
     </LinearLayout>
 
