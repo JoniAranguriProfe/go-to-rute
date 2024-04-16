@@ -18,7 +18,7 @@ interface NavigateContract {
     }
 
     interface NavigateModel {
-        fun getPlacesFromSearch(placeToSearch: String): List<Place>
+       suspend fun getPlacesFromSearch(placeToSearch: String): List<Place>
         fun getRouteToPlace(startPlace: Place, destinationPlace: Place): List<Point>
         fun getCurrentPointPosition(): Point
     }

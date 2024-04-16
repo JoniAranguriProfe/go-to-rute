@@ -3,14 +3,16 @@ package com.educacionit.gotorute.home.model.maps
 import com.educacionit.gotorute.contract.NavigateContract
 
 class NavigateRepository : NavigateContract.NavigateModel {
-    override fun getPlacesFromSearch(placeToSearch: String): List<Place> {
-        // Todo: Use an API to get places given the input text
-        return listOf(
+    override suspend fun getPlacesFromSearch(placeToSearch: String): List<Place> {
+        return ApiServiceProvider.searchServiceAPI.getPlacesFromSearch(placeToSearch = placeToSearch)
+            .body()?.map {
+            val convertedLatitude = it.latitude.toDouble()
+            val convertedLongitude = it.longitude.toDouble()
             Place(
-                "Abasto, Balvanera, Buenos Aires, Comuna 3, Autonomous City of Buenos Aires, C1193AAF, Argentina",
-                Point("-34.6037283".toDouble(), "-58.4125926".toDouble())
+                displayName = it.displayName,
+                point = Point(latitude = convertedLatitude, longitude = convertedLongitude)
             )
-        )
+        } ?: emptyList()
     }
 
     override fun getRouteToPlace(startPlace: Place, destinationPlace: Place): List<Point> {
