@@ -7,6 +7,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -14,6 +15,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 object MapsManager {
+    private var currentRoute: Polyline? = null
     private fun bearingBetweenLocations(latLng1: LatLng, latLng2: LatLng): Double {
         // Convert latitude and longitude to radians
         val lat1 = latLng1.latitude * PI / 180.0
@@ -39,11 +41,12 @@ object MapsManager {
     }
 
     fun addRouteToMap(safeContext: Context, googleMap: GoogleMap, route: List<LatLng>) {
+        currentRoute?.remove()
         val polylineOptions = PolylineOptions()
             .addAll(route)
             .color(safeContext.getColor(R.color.violet_primary))
             .width(30f)
-        googleMap.addPolyline(polylineOptions)
+        currentRoute = googleMap.addPolyline(polylineOptions)
     }
 
     fun alignMapToRoute(googleMap: GoogleMap, route: List<LatLng>) {
