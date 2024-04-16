@@ -6,10 +6,15 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface SearchServiceAPI {
-    @GET("/search.php")
+    @GET(SEARCH_PATH)
     suspend fun getPlacesFromSearch(
-        @Query("q") placeToSearch: String,
-        @Query("format") format: String = "jsonv2"
+        @Query(PLACE_QUERY) placeToSearch: String,
+        @Query(FORMAT_QUERY) format: String = DEFAULT_FORMAT
     ): Response<List<PlaceSearchResponse>>
 
 }
+
+const val SEARCH_PATH = "/search.php"
+const val PLACE_QUERY = "q"
+const val FORMAT_QUERY = "format"
+const val DEFAULT_FORMAT = "jsonv2"

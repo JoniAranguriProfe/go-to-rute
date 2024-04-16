@@ -4,43 +4,36 @@ import com.educacionit.gotorute.contract.NavigateContract
 
 class NavigateRepository : NavigateContract.NavigateModel {
     override suspend fun getPlacesFromSearch(placeToSearch: String): List<Place> {
-        return ApiServiceProvider.searchServiceAPI.getPlacesFromSearch(placeToSearch = placeToSearch)
-            .body()?.map {
-            val convertedLatitude = it.latitude.toDouble()
-            val convertedLongitude = it.longitude.toDouble()
-            Place(
-                displayName = it.displayName,
-                point = Point(latitude = convertedLatitude, longitude = convertedLongitude)
-            )
-        } ?: emptyList()
+        val response = ApiServiceProvider.searchServiceAPI.getPlacesFromSearch(placeToSearch)
+        return response.body()?.let { mapPlaces(it) } ?: emptyList()
     }
 
-    override fun getRouteToPlace(startPlace: Place, destinationPlace: Place): List<Point> {
-        // Todo: Use an API to get routes from two given points
-        return (listOf(
-            Point(-34.679437, -58.553777),
-            Point(
-                -34.679217,
-                -58.553513
-            ),
-            Point(
-                -34.678996,
-                -58.553279
-            ),
-            Point(
-                -34.678119,
-                -58.554457
-            ),
-            Point(
-                -34.677234,
-                -58.55561
-            ),
-            Point(
-                -34.676409,
-                -58.556671
+    private fun mapPlaces(apiPlaces: List<PlaceSearchResponse>): List<Place> {
+        return apiPlaces.map {
+            Place(
+                displayName = it.displayName,
+                point = Point(it.latitude.toDouble(), it.longitude.toDouble())
             )
-        ))
+        }
     }
+
+    override suspend fun getRouteToPlace(startPlace: Place, destinationPlace: Place): List<Point> {
+        val rawRouteResponse = ApiServiceProvider.routesServiceAPI.getRouteToPlace(
+            getFormattedPoints(startPlace),
+            getFormattedPoints(destinationPlace)
+        )
+        return if (rawRouteResponse.isSuccessful) {
+            mapRoute(rawRouteResponse.body()?.route?.geometry?.coordinates)
+        } else {
+            emptyList()
+        }
+    }
+
+    private fun getFormattedPoints(place: Place): String =
+        "${place.point.latitude},${place.point.longitude}"
+
+    private fun mapRoute(coordinates: List<List<Double>>?): List<Point> =
+        coordinates?.map { Point(it.first(), it.last()) } ?: emptyList()
 
     override fun getCurrentPointPosition(): Point {
         // Todo: Get current position from LocationService
