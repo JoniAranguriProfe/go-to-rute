@@ -2,18 +2,23 @@ package com.educacionit.gotorute.maps
 
 import android.content.Context
 import com.educacionit.gotorute.R
+import com.educacionit.gotorute.home.model.maps.Point
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 object MapsManager {
+    private var currentRoute: Polyline? = null
     private fun bearingBetweenLocations(latLng1: LatLng, latLng2: LatLng): Double {
         // Convert latitude and longitude to radians
         val lat1 = latLng1.latitude * PI / 180.0
@@ -39,11 +44,12 @@ object MapsManager {
     }
 
     fun addRouteToMap(safeContext: Context, googleMap: GoogleMap, route: List<LatLng>) {
+        currentRoute?.remove()
         val polylineOptions = PolylineOptions()
             .addAll(route)
             .color(safeContext.getColor(R.color.violet_primary))
             .width(30f)
-        googleMap.addPolyline(polylineOptions)
+        currentRoute = googleMap.addPolyline(polylineOptions)
     }
 
     fun alignMapToRoute(googleMap: GoogleMap, route: List<LatLng>) {
@@ -80,5 +86,40 @@ object MapsManager {
                 .position(initialPoint)
                 .title(title)
         )
+    }
+
+
+    // Function to find the index of the nearest point in the route to the user's location
+    fun findNearestPointIndex(userLocation: Point, route: List<LatLng>): Int {
+        var nearestIndex = -1
+        var shortestDistance = Double.MAX_VALUE
+
+        for (i in route.indices) {
+            val distance =
+                calculateDistance(userLocation, Point(route[i].latitude, route[i].longitude))
+            if (distance < shortestDistance) {
+                shortestDistance = distance
+                nearestIndex = i
+            }
+        }
+
+        return nearestIndex
+    }
+
+    // Function to calculate distance between two LatLng points (using Haversine formula)
+    private fun calculateDistance(point1: Point, point2: Point): Double {
+        val earthRadius = 6371 // Earth's radius in kilometers
+        val lat1 = Math.toRadians(point1.latitude)
+        val lon1 = Math.toRadians(point1.longitude)
+        val lat2 = Math.toRadians(point2.latitude)
+        val lon2 = Math.toRadians(point2.longitude)
+
+        val dLat = lat2 - lat1
+        val dLon = lon2 - lon1
+
+        val a = sin(dLat / 2).pow(2) + cos(lat1) * cos(lat2) * sin(dLon / 2).pow(2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        return earthRadius * c
     }
 }
