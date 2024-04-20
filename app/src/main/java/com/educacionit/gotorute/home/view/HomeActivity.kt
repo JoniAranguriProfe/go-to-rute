@@ -1,18 +1,21 @@
 package com.educacionit.gotorute.home.view
 
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.educacionit.gotorute.R
+import com.educacionit.gotorute.contract.BaseContract
 import com.educacionit.gotorute.home.view.favorites.MyRoutesFragment
 import com.educacionit.gotorute.home.view.maps.NavigateFragment
 import com.educacionit.gotorute.home.view.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), BaseContract.IBaseView{
 
     private lateinit var navigateFragment: Fragment
     private lateinit var profileFragment: Fragment
@@ -64,5 +67,15 @@ class HomeActivity : AppCompatActivity() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.home_container, fragment)
         transaction.commit()
+    }
+
+    override fun showErrorMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun getViewContext(): Context = this
+
+    override fun initPresenter() {
+        // Not used
     }
 }
