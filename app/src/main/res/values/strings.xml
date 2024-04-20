@@ -6,4 +6,5 @@
     <string name="search_places_message">Where do you want to go?</string>
     <string name="maps_api_key">AIzaSyA2Yy26_3g5b8ZLr7UGN8H3jEBBjz7dPGE</string>
     <string name="permission_denied_message">The app needs location permissions, please enable location access in settings</string>
+    <string name="cannot_get_current_location">We cannot get current position, try again later</string>
 </resources>

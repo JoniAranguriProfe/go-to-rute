@@ -137,7 +137,7 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
                     configureMap()
                     return
                 }
-                getParentView().showErrorMessage(getString(R.string.permission_denied_message))
+                getParentView()?.showErrorMessage(getString(R.string.permission_denied_message))
                 openAppSettings()
             }
         }
@@ -168,16 +168,22 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-    override fun getParentView(): BaseContract.IBaseView {
-        return activity as BaseContract.IBaseView
+    override fun getParentView(): BaseContract.IBaseView? {
+        return activity as? BaseContract.IBaseView
     }
 
     private fun executeWithLocationPermission(mapFunction: () -> Unit) {
         if (locationState != LocationGranted) {
-            getParentView().showErrorMessage("")
+            getParentView()?.showErrorMessage(getString(R.string.permission_denied_message))
+            openAppSettings()
             return
         }
         mapFunction()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        navigatePresenter.stopListeningLocation()
     }
 
     companion object {

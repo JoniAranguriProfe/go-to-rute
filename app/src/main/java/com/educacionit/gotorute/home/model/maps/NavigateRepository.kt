@@ -1,8 +1,22 @@
 package com.educacionit.gotorute.home.model.maps
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.location.Location
 import com.educacionit.gotorute.contract.NavigateContract
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 
 class NavigateRepository : NavigateContract.NavigateModel {
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
+    var currentLocation: Point? = null
+
     override suspend fun getPlacesFromSearch(placeToSearch: String): List<Place> {
         val response = ApiServiceProvider.searchServiceAPI.getPlacesFromSearch(placeToSearch)
         return response.body()?.let { mapPlaces(it) } ?: emptyList()
@@ -35,8 +49,38 @@ class NavigateRepository : NavigateContract.NavigateModel {
     private fun mapRoute(coordinates: List<List<Double>>?): List<Point> =
         coordinates?.map { Point(it.first(), it.last()) } ?: emptyList()
 
-    override fun getCurrentPointPosition(): Point {
-        // Todo: Get current position from LocationService
-        return Point(-34.679437, -58.553777)
+    override fun getCurrentPointPosition(): Point? = currentLocation
+
+    override fun initFusedLocationProviderClient(context: Context) {
+        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        setupLocationCallback()
+    }
+
+    private fun setupLocationCallback() {
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+                currentLocation =
+                    locationResult.lastLocation?.let { Point(it.latitude, it.longitude) }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun startListeningLocation() {
+        val locationRequest = LocationRequest.Builder(LOCATION_UPDATES_INTERVAL)
+            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+            .setMinUpdateIntervalMillis(LOCATION_FASTEST_UPDATES_INTERVAL)
+            .build()
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+    }
+
+    override fun stopListeningLocation() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+    companion object {
+        const val LOCATION_UPDATES_INTERVAL = 1000L
+        const val LOCATION_FASTEST_UPDATES_INTERVAL = 800L
     }
 }
