@@ -1,6 +1,7 @@
 package com.educacionit.gotorute.contract
 
 import android.content.Context
+import com.educacionit.gotorute.home.model.maps.NavigateRepository
 import com.educacionit.gotorute.home.model.maps.Place
 import com.educacionit.gotorute.home.model.maps.Point
 import com.google.android.gms.maps.model.LatLng
@@ -25,7 +26,7 @@ interface NavigateContract {
         suspend fun getRouteToPlace(startPlace: Place, destinationPlace: Place): List<Point>
         fun getCurrentPointPosition(): Point?
         fun initFusedLocationProviderClient(context: Context)
-        fun startListeningLocation()
         fun stopListeningLocation()
+        fun startListeningLocation(locationListener: NavigateRepository.OnNewLocationListener)
     }
 }

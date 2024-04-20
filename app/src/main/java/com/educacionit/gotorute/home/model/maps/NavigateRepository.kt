@@ -10,11 +10,13 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import java.lang.ref.WeakReference
 
 class NavigateRepository : NavigateContract.NavigateModel {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+    private lateinit var newLocationListener : WeakReference<OnNewLocationListener>
     var currentLocation: Point? = null
 
     override suspend fun getPlacesFromSearch(placeToSearch: String): List<Place> {
@@ -53,7 +55,6 @@ class NavigateRepository : NavigateContract.NavigateModel {
 
     override fun initFusedLocationProviderClient(context: Context) {
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-        setupLocationCallback()
     }
 
     private fun setupLocationCallback() {
@@ -62,12 +63,17 @@ class NavigateRepository : NavigateContract.NavigateModel {
                 super.onLocationResult(locationResult)
                 currentLocation =
                     locationResult.lastLocation?.let { Point(it.latitude, it.longitude) }
+                currentLocation?.let {
+                    newLocationListener.get()?.currentLocationUpdate(it)
+                }
             }
         }
     }
 
     @SuppressLint("MissingPermission")
-    override fun startListeningLocation() {
+    override fun startListeningLocation(locationListener: OnNewLocationListener) {
+        this.newLocationListener = WeakReference(locationListener)
+        setupLocationCallback()
         val locationRequest = LocationRequest.Builder(LOCATION_UPDATES_INTERVAL)
             .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
             .setMinUpdateIntervalMillis(LOCATION_FASTEST_UPDATES_INTERVAL)
@@ -77,6 +83,10 @@ class NavigateRepository : NavigateContract.NavigateModel {
 
     override fun stopListeningLocation() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+    interface OnNewLocationListener {
+        fun currentLocationUpdate(point: Point)
     }
 
     companion object {
