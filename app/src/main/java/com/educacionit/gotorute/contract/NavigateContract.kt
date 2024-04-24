@@ -19,6 +19,8 @@ interface NavigateContract {
         suspend fun getCurrentPointPosition(): Point?
         fun startListeningLocation()
         fun stopListeningLocation()
+        fun startCheckingDistanceToRoute()
+        fun stopCheckingDistanceToRoute()
     }
 
     interface NavigateModel {
@@ -28,5 +30,7 @@ interface NavigateContract {
         fun initFusedLocationProviderClient(context: Context)
         fun stopListeningLocation()
         fun startListeningLocation(locationListener: NavigateRepository.OnNewLocationListener)
+        fun startCheckingDistanceToRoute(context: Context)
+        fun stopCheckingDistanceToRoute(context: Context)
     }
 }
