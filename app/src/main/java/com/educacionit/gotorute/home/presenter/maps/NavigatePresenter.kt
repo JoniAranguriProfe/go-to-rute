@@ -39,6 +39,7 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
     }
 
     override fun getRouteToPlace(destinationPlace: Place) {
+        stopCheckingDistanceToRoute()
         CoroutineScope(Dispatchers.IO).launch {
             val currentPosition = getCurrentPointPosition()
             currentPosition?.let {
@@ -48,14 +49,17 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
                 }
                 withContext(Dispatchers.Main) {
                     navigationState = NavigationStarted(route = route)
+                    startCheckingDistanceToRoute()
                     navigateView.drawRoute(route)
                 }
             } ?: run {
-                navigateView.getParentView()?.showErrorMessage(
-                    navigateView.getParentView()?.getViewContext()?.resources?.getString(
-                        R.string.cannot_get_current_location
-                    ) ?: ""
-                )
+                withContext(Dispatchers.Main) {
+                    navigateView.getParentView()?.showErrorMessage(
+                        navigateView.getParentView()?.getViewContext()?.resources?.getString(
+                            R.string.cannot_get_current_location
+                        ) ?: ""
+                    )
+                }
                 navigationState = NotNavigating
             }
         }
@@ -84,10 +88,12 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
                         // Do nothing
                     }
 
-                    is NavigationStarted -> updateDrawnRoute(
-                        point,
-                        (navigationState as? NavigationStarted)?.route
-                    )
+                    is NavigationStarted -> {
+                        updateDrawnRoute(
+                            point,
+                            (navigationState as? NavigationStarted)?.route
+                        )
+                    }
                 }
             }
 
@@ -118,6 +124,18 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
 
     override fun stopListeningLocation() {
         navigateModel.stopListeningLocation()
+    }
+
+    override fun startCheckingDistanceToRoute() {
+        navigateView.getParentView()?.getViewContext()?.let { safeContext ->
+            navigateModel.startCheckingDistanceToRoute(safeContext)
+        }
+    }
+
+    override fun stopCheckingDistanceToRoute() {
+        navigateView.getParentView()?.getViewContext()?.let { safeContext ->
+            navigateModel.stopCheckingDistanceToRoute(safeContext)
+        }
     }
 
     companion object {

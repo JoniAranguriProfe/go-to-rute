@@ -5,7 +5,9 @@ import com.educacionit.gotorute.R
 import com.educacionit.gotorute.home.model.maps.Point
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.CustomCap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
@@ -18,7 +20,10 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 object MapsManager {
+    private const val DISTANCE_TO_BE_OUT_OF_ROUTE = 100
     private var currentRoute: Polyline? = null
+    private var lastMapAlignmentTime = 0L
+
     private fun bearingBetweenLocations(latLng1: LatLng, latLng2: LatLng): Double {
         // Convert latitude and longitude to radians
         val lat1 = latLng1.latitude * PI / 180.0
@@ -47,27 +52,32 @@ object MapsManager {
         currentRoute?.remove()
         val polylineOptions = PolylineOptions()
             .addAll(route)
+            .startCap(CustomCap(BitmapDescriptorFactory.fromResource(R.drawable.educacionit_logo), 100f))
             .color(safeContext.getColor(R.color.violet_primary))
             .width(30f)
         currentRoute = googleMap.addPolyline(polylineOptions)
     }
 
     fun alignMapToRoute(googleMap: GoogleMap, route: List<LatLng>) {
-        val bearing = if (route.size >= 2) {
-            val startPoint = route[0]
-            val endPoint = route[1]
-            bearingBetweenLocations(startPoint, endPoint).toFloat()
-        } else 0f
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastMapAlignmentTime >= 6000) {
+            lastMapAlignmentTime = currentTime
+            val bearing = if (route.size >= 2) {
+                val startPoint = route[0]
+                val endPoint = route[1]
+                bearingBetweenLocations(startPoint, endPoint).toFloat()
+            } else 0f
 
-        // Create a camera update with the desired bearing
-        val cameraPosition = CameraPosition.Builder()
-            .target(route[0]) // Set the center of the map to the starting point of the route
-            .zoom(18f) // Set a desired zoom level
-            .bearing(bearing) // Set the desired bearing (orientation) of the camera
-            .build()
+            // Create a camera update with the desired bearing
+            val cameraPosition = CameraPosition.Builder()
+                .target(route[0]) // Set the center of the map to the starting point of the route
+                .zoom(18f) // Set a desired zoom level
+                .bearing(bearing) // Set the desired bearing (orientation) of the camera
+                .build()
 
-        // Animate the camera to the specified position
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            // Animate the camera to the specified position
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        }
     }
 
     fun centerMapIntoLocation(googleMap: GoogleMap, initialPoint: LatLng) {
@@ -106,7 +116,7 @@ object MapsManager {
         return nearestIndex
     }
 
-    // Function to calculate distance between two LatLng points (using Haversine formula)
+    // Function to calculate distance between two LatLng points in meters (using Haversine formula)
     private fun calculateDistance(point1: Point, point2: Point): Double {
         val earthRadius = 6371 // Earth's radius in kilometers
         val lat1 = Math.toRadians(point1.latitude)
@@ -120,6 +130,17 @@ object MapsManager {
         val a = sin(dLat / 2).pow(2) + cos(lat1) * cos(lat2) * sin(dLon / 2).pow(2)
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-        return earthRadius * c
+        val distanceInKm = earthRadius * c // Distance in kilometers
+        return distanceInKm * 1000
+    }
+
+    fun isOutsideOfRoute(currentPoint: Point, route: List<Point>): Boolean {
+        val nearestPoint = if (route.isEmpty()) -1 else findNearestPointIndex(
+            currentPoint,
+            route.map { LatLng(it.latitude, it.longitude) })
+        return nearestPoint >= 0 && calculateDistance(
+            currentPoint,
+            route[nearestPoint]
+        ) > DISTANCE_TO_BE_OUT_OF_ROUTE
     }
 }
