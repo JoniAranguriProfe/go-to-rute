@@ -93,21 +93,19 @@ class NavigateRepository : NavigateContract.NavigateModel {
 
     override fun registerRouteNavigationAlarm(context: Context?) {
         context?.let { safeContext ->
-            {
-                val alarmManager =
-                    safeContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                val alarmIntent = Intent(safeContext, HomeActivity::class.java)
-                val pendingIntent = PendingIntent.getActivity(
-                    safeContext, 0, alarmIntent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
+            val alarmManager =
+                safeContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val alarmIntent = Intent(safeContext, HomeActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(
+                safeContext, 0, alarmIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
 
-                alarmManager.set(
-                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + 10000,
-                    pendingIntent
-                )
-            }
+            alarmManager.set(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() + 10000,
+                pendingIntent
+            )
         }
     }
 
