@@ -50,6 +50,7 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
                 withContext(Dispatchers.Main) {
                     navigationState = NavigationStarted(route = route)
                     startCheckingDistanceToRoute()
+                    navigateModel.registerRouteNavigationAlarm(navigateView.getParentView()?.getViewContext())
                     navigateView.drawRoute(route)
                 }
             } ?: run {
