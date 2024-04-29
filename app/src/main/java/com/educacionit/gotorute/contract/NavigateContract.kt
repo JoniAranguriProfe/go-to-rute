@@ -19,8 +19,8 @@ interface NavigateContract {
         suspend fun getCurrentPointPosition(): Point?
         fun startListeningLocation()
         fun stopListeningLocation()
-        fun startCheckingDistanceToRoute()
-        fun stopCheckingDistanceToRoute()
+        fun startNavigation()
+        fun stopCurrentNavigation()
     }
 
     interface NavigateModel {
@@ -34,5 +34,7 @@ interface NavigateContract {
         fun stopCheckingDistanceToRoute(context: Context)
         fun registerRouteNavigationAlarm(context: Context?)
         fun startCheckingBatteryStatus(context: Context?)
+        fun removeNavigationAlarm(safeContext: Context)
+        fun stopCheckingBatteryStatus(safeContext: Context)
     }
 }

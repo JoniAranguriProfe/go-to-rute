@@ -7,7 +7,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.IBinder
@@ -27,6 +26,8 @@ import java.lang.ref.WeakReference
 
 class NavigateRepository : NavigateContract.NavigateModel {
 
+    private var alarmPendingIntent: PendingIntent? = null
+    private var alarmManager: AlarmManager? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private lateinit var newLocationListener: WeakReference<OnNewLocationListener>
@@ -95,21 +96,33 @@ class NavigateRepository : NavigateContract.NavigateModel {
         isServiceBound = false
     }
 
+    override fun removeNavigationAlarm(safeContext: Context) {
+        alarmPendingIntent?.let {
+            alarmManager?.cancel(it)
+        }
+    }
+
+    override fun stopCheckingBatteryStatus(safeContext: Context) {
+        batteryLowReceiver?.let {
+            safeContext.unregisterReceiver(it)
+        }
+    }
+
     override fun registerRouteNavigationAlarm(context: Context?) {
         context?.let { safeContext ->
-            val alarmManager =
+            alarmManager =
                 safeContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val alarmIntent = Intent(safeContext, HomeActivity::class.java)
             alarmIntent.action = ACTION_NAVIGATION_ALARM
-            val pendingIntent = PendingIntent.getActivity(
+            alarmPendingIntent = PendingIntent.getActivity(
                 safeContext, 0, alarmIntent,
                 PendingIntent.FLAG_IMMUTABLE
             )
 
-            alarmManager.set(
+            alarmManager?.set(
                 AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + 10000,
-                pendingIntent
+                alarmPendingIntent!!
             )
         }
     }

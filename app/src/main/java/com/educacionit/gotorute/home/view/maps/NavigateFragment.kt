@@ -210,6 +210,7 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
 
     override fun onDestroy() {
         super.onDestroy()
+        navigatePresenter.stopCurrentNavigation()
         navigatePresenter.stopListeningLocation()
     }
 

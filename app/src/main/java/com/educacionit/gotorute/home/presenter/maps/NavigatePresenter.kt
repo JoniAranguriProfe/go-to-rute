@@ -39,7 +39,7 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
     }
 
     override fun getRouteToPlace(destinationPlace: Place) {
-        stopCheckingDistanceToRoute()
+        stopCurrentNavigation()
         CoroutineScope(Dispatchers.IO).launch {
             val currentPosition = getCurrentPointPosition()
             currentPosition?.let {
@@ -49,9 +49,7 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
                 }
                 withContext(Dispatchers.Main) {
                     navigationState = NavigationStarted(route = route)
-                    startCheckingDistanceToRoute()
-                    navigateModel.registerRouteNavigationAlarm(navigateView.getParentView()?.getViewContext())
-                    navigateModel.startCheckingBatteryStatus(navigateView.getParentView()?.getViewContext())
+                    startNavigation()
                     navigateView.drawRoute(route)
                 }
             } ?: run {
@@ -128,15 +126,21 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
         navigateModel.stopListeningLocation()
     }
 
-    override fun startCheckingDistanceToRoute() {
+    override fun startNavigation() {
         navigateView.getParentView()?.getViewContext()?.let { safeContext ->
             navigateModel.startCheckingDistanceToRoute(safeContext)
+            navigateModel.registerRouteNavigationAlarm(safeContext)
+            navigateModel.startCheckingBatteryStatus(safeContext)
         }
     }
 
-    override fun stopCheckingDistanceToRoute() {
-        navigateView.getParentView()?.getViewContext()?.let { safeContext ->
-            navigateModel.stopCheckingDistanceToRoute(safeContext)
+    override fun stopCurrentNavigation() {
+        if(navigationState is NavigationStarted){
+            navigateView.getParentView()?.getViewContext()?.let { safeContext ->
+                navigateModel.stopCheckingDistanceToRoute(safeContext)
+                navigateModel.removeNavigationAlarm(safeContext)
+                navigateModel.stopCheckingBatteryStatus(safeContext)
+            }
         }
     }
 
