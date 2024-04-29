@@ -43,6 +43,7 @@
             android:description="@string/check_user_position_service_description"
             android:enabled="true"
             android:exported="false" />
+
     </application>
 
 </manifest>

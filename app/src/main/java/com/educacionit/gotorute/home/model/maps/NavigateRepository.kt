@@ -1,22 +1,28 @@
 package com.educacionit.gotorute.home.model.maps
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.os.SystemClock
 import com.educacionit.gotorute.contract.NavigateContract
+import com.educacionit.gotorute.home.model.maps.receivers.BatteryLowReceiver
 import com.educacionit.gotorute.home.model.maps.services.RouteCheckService
+import com.educacionit.gotorute.home.view.HomeActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.google.android.gms.maps.model.LatLng
 import java.lang.ref.WeakReference
+
 
 class NavigateRepository : NavigateContract.NavigateModel {
 
@@ -25,9 +31,10 @@ class NavigateRepository : NavigateContract.NavigateModel {
     private lateinit var newLocationListener: WeakReference<OnNewLocationListener>
     private var routeCheckServiceConnection: ServiceConnection? = null
     private var isServiceBound = false
-    private var routeCheckService: RouteCheckService ?= null
+    private var routeCheckService: RouteCheckService? = null
     var currentLocation: Point? = null
     var currentRoute: List<Point>? = null
+    private var batteryLowReceiver: BatteryLowReceiver? = null
 
     override suspend fun getPlacesFromSearch(placeToSearch: String): List<Place> {
         val response = ApiServiceProvider.searchServiceAPI.getPlacesFromSearch(placeToSearch)
@@ -70,7 +77,7 @@ class NavigateRepository : NavigateContract.NavigateModel {
     }
 
     override fun startCheckingDistanceToRoute(context: Context) {
-        if(isServiceBound){
+        if (isServiceBound) {
             return
         }
         setupRouteServiceConnection()
@@ -85,6 +92,32 @@ class NavigateRepository : NavigateContract.NavigateModel {
             context.unbindService(it)
         }
         isServiceBound = false
+    }
+
+    override fun registerRouteNavigationAlarm(context: Context?) {
+        context?.let { safeContext ->
+            val alarmManager =
+                safeContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val alarmIntent = Intent(safeContext, HomeActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(
+                safeContext, 0, alarmIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+            alarmManager.set(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() + 10000,
+                pendingIntent
+            )
+        }
+    }
+
+    override fun startCheckingBatteryStatus(context: Context?) {
+        context?.let { safeContext ->
+            batteryLowReceiver = BatteryLowReceiver()
+            val batteryIntentFilter = IntentFilter(Intent.ACTION_BATTERY_LOW)
+            safeContext.registerReceiver(batteryLowReceiver, batteryIntentFilter)
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -116,13 +149,14 @@ class NavigateRepository : NavigateContract.NavigateModel {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 val binder = service as RouteCheckService.RouteCheckBinder
                 routeCheckService = binder.getService()
-                routeCheckService?.setLocationProvider(object : RouteCheckService.CurrentLocationStatusProvider{
+                routeCheckService?.setLocationProvider(object :
+                    RouteCheckService.CurrentLocationStatusProvider {
                     override fun getCurrentLocation(): Point? {
-                       return currentLocation
+                        return currentLocation
                     }
 
                     override fun getCurrentRoute(): List<Point>? {
-                       return currentRoute
+                        return currentRoute
                     }
 
                 }

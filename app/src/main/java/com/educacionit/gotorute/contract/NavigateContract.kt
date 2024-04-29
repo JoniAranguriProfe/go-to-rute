@@ -32,5 +32,7 @@ interface NavigateContract {
         fun startListeningLocation(locationListener: NavigateRepository.OnNewLocationListener)
         fun startCheckingDistanceToRoute(context: Context)
         fun stopCheckingDistanceToRoute(context: Context)
+        fun registerRouteNavigationAlarm(context: Context?)
+        fun startCheckingBatteryStatus(context: Context?)
     }
 }
