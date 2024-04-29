@@ -1,6 +1,7 @@
 package com.educacionit.gotorute.home.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -10,12 +11,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.educacionit.gotorute.R
 import com.educacionit.gotorute.contract.BaseContract
+import com.educacionit.gotorute.home.model.maps.NavigateRepository.Companion.ACTION_NAVIGATION_ALARM
 import com.educacionit.gotorute.home.view.favorites.MyRoutesFragment
 import com.educacionit.gotorute.home.view.maps.NavigateFragment
 import com.educacionit.gotorute.home.view.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class HomeActivity : AppCompatActivity(), BaseContract.IBaseView{
+class HomeActivity : AppCompatActivity(), BaseContract.IBaseView {
 
     private lateinit var navigateFragment: Fragment
     private lateinit var profileFragment: Fragment
@@ -30,6 +33,28 @@ class HomeActivity : AppCompatActivity(), BaseContract.IBaseView{
             insets
         }
         configureViews()
+        handleIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        if (intent?.action == ACTION_NAVIGATION_ALARM) {
+            showDialogInHomeActivity(intent)
+        }
+    }
+
+    private fun showDialogInHomeActivity(intent: Intent) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Sigues ahí?")
+            .setMessage("Ha pasado un tiempo y aún no has llegado al destino..")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun configureViews() {
@@ -59,7 +84,7 @@ class HomeActivity : AppCompatActivity(), BaseContract.IBaseView{
                 else -> false
             }
         }
-        bottomNavigationView.selectedItemId =  R.id.menu_navigate
+        bottomNavigationView.selectedItemId = R.id.menu_navigate
     }
 
 

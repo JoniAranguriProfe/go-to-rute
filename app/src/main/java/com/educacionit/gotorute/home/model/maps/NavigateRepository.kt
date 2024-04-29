@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.IBinder
@@ -99,6 +100,7 @@ class NavigateRepository : NavigateContract.NavigateModel {
             val alarmManager =
                 safeContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val alarmIntent = Intent(safeContext, HomeActivity::class.java)
+            alarmIntent.action = ACTION_NAVIGATION_ALARM
             val pendingIntent = PendingIntent.getActivity(
                 safeContext, 0, alarmIntent,
                 PendingIntent.FLAG_IMMUTABLE
@@ -182,5 +184,6 @@ class NavigateRepository : NavigateContract.NavigateModel {
     companion object {
         const val LOCATION_UPDATES_INTERVAL = 1000L
         const val LOCATION_FASTEST_UPDATES_INTERVAL = 800L
+        const val ACTION_NAVIGATION_ALARM = "com.educacionit.gotorute.ACTION_NAVIGATION_ALARM"
     }
 }

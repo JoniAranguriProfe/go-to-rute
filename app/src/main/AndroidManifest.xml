@@ -27,7 +27,8 @@
 
         <activity
             android:name=".home.view.HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".login.view.LoginActivity"
             android:exported="true">
