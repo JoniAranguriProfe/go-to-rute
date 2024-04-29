@@ -51,6 +51,7 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
                     navigationState = NavigationStarted(route = route)
                     startCheckingDistanceToRoute()
                     navigateModel.registerRouteNavigationAlarm(navigateView.getParentView()?.getViewContext())
+                    navigateModel.startCheckingBatteryStatus(navigateView.getParentView()?.getViewContext())
                     navigateView.drawRoute(route)
                 }
             } ?: run {

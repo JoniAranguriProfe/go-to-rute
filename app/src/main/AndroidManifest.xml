@@ -44,13 +44,6 @@
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name=".home.model.maps.receivers.BatteryLowReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BATTERY_LOW"/>
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>

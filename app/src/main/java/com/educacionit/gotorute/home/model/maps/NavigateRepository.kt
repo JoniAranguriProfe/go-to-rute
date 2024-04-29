@@ -7,10 +7,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
 import com.educacionit.gotorute.contract.NavigateContract
+import com.educacionit.gotorute.home.model.maps.receivers.BatteryLowReceiver
 import com.educacionit.gotorute.home.model.maps.services.RouteCheckService
 import com.educacionit.gotorute.home.view.HomeActivity
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -32,6 +34,7 @@ class NavigateRepository : NavigateContract.NavigateModel {
     private var routeCheckService: RouteCheckService? = null
     var currentLocation: Point? = null
     var currentRoute: List<Point>? = null
+    private var batteryLowReceiver: BatteryLowReceiver? = null
 
     override suspend fun getPlacesFromSearch(placeToSearch: String): List<Place> {
         val response = ApiServiceProvider.searchServiceAPI.getPlacesFromSearch(placeToSearch)
@@ -106,6 +109,14 @@ class NavigateRepository : NavigateContract.NavigateModel {
                 SystemClock.elapsedRealtime() + 10000,
                 pendingIntent
             )
+        }
+    }
+
+    override fun startCheckingBatteryStatus(context: Context?) {
+        context?.let { safeContext ->
+            batteryLowReceiver = BatteryLowReceiver()
+            val batteryIntentFilter = IntentFilter(Intent.ACTION_BATTERY_LOW)
+            safeContext.registerReceiver(batteryLowReceiver, batteryIntentFilter)
         }
     }
 
