@@ -28,6 +28,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class NavigateFragment : Fragment(), OnMapReadyCallback,
     NavigateContract.NavigateView<BaseContract.IBaseView> {
@@ -181,10 +184,15 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
     @SuppressLint("MissingPermission")
     private fun configureMap() {
         executeWithLocationPermission {
-            val initialFakePoint = LatLng(-34.679437, -58.553777)
-            MapsManager.addMarkerToMap(googleMap, initialFakePoint)
-            MapsManager.centerMapIntoLocation(googleMap, initialFakePoint)
-
+            CoroutineScope(Dispatchers.Main).launch {
+                val currentPosition = navigatePresenter.getCurrentPointPosition()
+                currentPosition?.let {
+                    MapsManager.centerMapIntoLocation(
+                        googleMap,
+                        LatLng(it.latitude, it.longitude)
+                    )
+                }
+            }
             googleMap.isMyLocationEnabled = true
         }
     }

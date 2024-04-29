@@ -52,7 +52,7 @@ object MapsManager {
         currentRoute?.remove()
         val polylineOptions = PolylineOptions()
             .addAll(route)
-            .startCap(CustomCap(BitmapDescriptorFactory.fromResource(R.drawable.educacionit_logo), 100f))
+            .startCap(CustomCap(BitmapDescriptorFactory.fromResource(R.drawable.map_arrow), 50f))
             .color(safeContext.getColor(R.color.violet_primary))
             .width(30f)
         currentRoute = googleMap.addPolyline(polylineOptions)
