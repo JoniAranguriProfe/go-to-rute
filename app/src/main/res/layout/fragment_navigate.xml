@@ -6,12 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".home.view.maps.NavigateFragment">
 
-    <fragment
-        android:id="@+id/location_maps_fragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".home.view.maps.NavigateFragment" />
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/location_maps_fragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".home.view.maps.NavigateFragment" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:paddingEnd="16dp"
+            android:paddingBottom="40dp">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/shape_drawable_circle"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/weather_icon" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/shape_drawable_circle"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/cancel_icon" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/standard_bottom_sheet"

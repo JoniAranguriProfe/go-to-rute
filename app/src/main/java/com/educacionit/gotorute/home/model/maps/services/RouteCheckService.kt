@@ -1,25 +1,20 @@
 package com.educacionit.gotorute.home.model.maps.services
 
-import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.location.Location
-import android.location.LocationProvider
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
-import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
-import com.educacionit.gotorute.R
 import com.educacionit.gotorute.home.model.maps.Point
-import com.educacionit.gotorute.maps.MapsManager
-import com.google.android.gms.common.util.MapUtils
-import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.*
+import com.educacionit.gotorute.utils.MapsManager
+import com.educacionit.gotorute.utils.notifications.NotificationOutOfRoute
+import com.educacionit.gotorute.utils.notifications.NotificationUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class RouteCheckService : Service() {
 
@@ -77,49 +72,28 @@ class RouteCheckService : Service() {
             val currentRoute = it.getCurrentRoute()
             return currentRoute?.let {
                 currentLocation?.let {
-                    MapsManager.isOutsideOfRoute(currentLocation, currentRoute) }
+                    MapsManager.isOutsideOfRoute(currentLocation, currentRoute)
+                }
             } ?: false
         } ?: false
     }
 
     private fun showNotification() {
-        val notification = buildNotification()
-        notificationManager?.notify(NOTIFICATION_ID, notification)
-        notificationShown = true
-    }
-
-    private fun buildNotification(): Notification {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel()
-        }
-
-        return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Cuidado! Saliste de la ruta")
-            .setContentText("Go to Route ha diseñado una ruta para tu destino. ¿Estás seguro de que quieres salir de ella?")
-            .setSmallIcon(R.drawable.map_arrow_square)
-            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.educacionit_logo))
-            .setAutoCancel(true)
-            .build()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            "Notifications out of route",
-            NotificationManager.IMPORTANCE_HIGH
+        val title = "Cuidado! Saliste de la ruta"
+        val contentMessage =
+            "Go to Route ha diseñado una ruta para tu destino. ¿Estás seguro de que quieres salir de ella?"
+        NotificationUtils.showNotification(
+            applicationContext,
+            title,
+            contentMessage,
+            NotificationOutOfRoute
         )
-        notificationManager?.createNotificationChannel(channel)
+        notificationShown = true
     }
 
     interface CurrentLocationStatusProvider {
         fun getCurrentLocation(): Point?
         fun getCurrentRoute(): List<Point>?
-    }
-
-    companion object {
-        const val CHANNEL_ID = "Notifications out of route"
-        const val NOTIFICATION_ID = 23223
     }
 
 }
