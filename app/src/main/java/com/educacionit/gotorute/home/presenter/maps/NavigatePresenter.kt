@@ -6,7 +6,7 @@ import com.educacionit.gotorute.contract.NavigateContract
 import com.educacionit.gotorute.home.model.maps.NavigateRepository
 import com.educacionit.gotorute.home.model.maps.Place
 import com.educacionit.gotorute.home.model.maps.Point
-import com.educacionit.gotorute.maps.MapsManager
+import com.educacionit.gotorute.utils.MapsManager
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.educacionit.gotorute.maps
+package com.educacionit.gotorute.utils
 
 import android.content.Context
 import com.educacionit.gotorute.R

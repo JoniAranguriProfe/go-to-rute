@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -20,8 +21,8 @@ import com.educacionit.gotorute.contract.NavigateContract
 import com.educacionit.gotorute.home.model.maps.NavigateRepository
 import com.educacionit.gotorute.home.model.maps.Place
 import com.educacionit.gotorute.home.presenter.maps.NavigatePresenter
-import com.educacionit.gotorute.maps.MapsManager
 import com.educacionit.gotorute.ui.components.CustomSearchView
+import com.educacionit.gotorute.utils.MapsManager
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -100,6 +101,16 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
     override fun onMapReady(updatedMap: GoogleMap) {
         googleMap = updatedMap
         checkLocationsPermissions()
+        checkNotificationsPermissions()
+    }
+
+    private fun checkNotificationsPermissions() {
+        context?.let { safeContext ->
+            if (!hasPostNotificationPermission(safeContext)) {
+                requestPostNotificationPermission()
+                return@let
+            }
+        }
     }
 
     private fun checkLocationsPermissions() {
@@ -120,6 +131,22 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
             ),
             LOCATION_PERMISSION_REQUEST_CODE
         )
+    }
+
+    private fun requestPostNotificationPermission() {
+        requestPermissions(
+            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+            POST_NOTIFICATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    private fun hasPostNotificationPermission(safeContext: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.checkSelfPermission(
+                safeContext,
+                Manifest.permission.ACCESS_NOTIFICATION_POLICY
+            ) == PackageManager.PERMISSION_GRANTED
+        } else true
     }
 
     override fun onRequestPermissionsResult(
@@ -188,5 +215,6 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 174
+        const val POST_NOTIFICATION_PERMISSION_REQUEST_CODE = 123
     }
 }
