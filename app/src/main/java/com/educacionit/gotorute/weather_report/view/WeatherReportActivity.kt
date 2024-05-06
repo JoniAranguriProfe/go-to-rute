@@ -3,6 +3,7 @@ package com.educacionit.gotorute.weather_report.view
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -32,6 +33,7 @@ class WeatherReportActivity : AppCompatActivity() {
 
     private fun configureViews() {
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         loadingView.visibility = View.GONE
         configureWebview()
     }
@@ -80,6 +82,16 @@ class WeatherReportActivity : AppCompatActivity() {
         weatherWebview.loadUrl(weatherUrl)
     }
 
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed() 
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
     companion object {
         const val LATITUDE_EXTRA = "LATITUDE_EXTRA"
         const val LONGITUDE_EXTRA = "LONGITUDE_EXTRA"
