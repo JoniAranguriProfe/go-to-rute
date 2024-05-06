@@ -10,6 +10,7 @@ interface NavigateContract {
     interface NavigateView<T : BaseContract.IBaseView> : FragmentBaseContract.IFragmentBaseView<T> {
         fun showSearchResults(placeResults: List<Place>)
         fun drawRoute(route: List<LatLng>)
+        fun openCongratsScreen()
     }
 
     interface IFragmentNavigatePresenter<T : FragmentBaseContract.IFragmentBaseView<*>> :
@@ -24,7 +25,7 @@ interface NavigateContract {
     }
 
     interface NavigateModel {
-       suspend fun getPlacesFromSearch(placeToSearch: String): List<Place>
+        suspend fun getPlacesFromSearch(placeToSearch: String): List<Place>
         suspend fun getRouteToPlace(startPlace: Place, destinationPlace: Place): List<Point>
         fun getCurrentPointPosition(): Point?
         fun initFusedLocationProviderClient(context: Context)
@@ -36,5 +37,6 @@ interface NavigateContract {
         fun startCheckingBatteryStatus(context: Context?)
         fun removeNavigationAlarm(safeContext: Context)
         fun stopCheckingBatteryStatus(safeContext: Context)
+        fun setArriveDestinationListener(arriveDestinationListener: NavigateRepository.OnArriveDestinationListener?)
     }
 }
