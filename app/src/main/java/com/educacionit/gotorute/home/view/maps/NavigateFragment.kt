@@ -45,6 +45,7 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
     private lateinit var googleMap: GoogleMap
     private var locationState: LocationState = LocationNotGranted
     private lateinit var weatherButton: ImageButton
+    private var comesFromSettings = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -182,28 +183,41 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            LOCATION_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() &&
-                    grantResults.first() == PackageManager.PERMISSION_GRANTED
-                ) {
-                    locationState = LocationGranted
-                    configureMap()
-                    return
+        permissions.forEach { permission ->
+            when (permission) {
+                Manifest.permission.ACCESS_FINE_LOCATION -> {
+                    if (grantResults.isNotEmpty() &&
+                        permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                        grantResults.first() == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        locationState = LocationGranted
+                        configureMap()
+                        return
+                    }
+                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        getParentView()?.showErrorMessage(getString(R.string.permission_denied_message))
+                        openAppSettings()
+                    }
                 }
-                getParentView()?.showErrorMessage(getString(R.string.permission_denied_message))
-                openAppSettings()
             }
         }
     }
 
     private fun openAppSettings() {
+        comesFromSettings = true
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         val uri = Uri.fromParts("package", requireActivity().packageName, null)
         intent.data = uri
         startActivity(intent)
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (comesFromSettings) {
+            checkLocationsPermissions()
+            comesFromSettings = false
+        }
+    }
 
     @SuppressLint("MissingPermission")
     private fun configureMap() {

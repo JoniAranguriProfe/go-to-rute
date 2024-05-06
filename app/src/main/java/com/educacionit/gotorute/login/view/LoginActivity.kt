@@ -54,6 +54,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.LoginView {
     override fun openMapsScreen() {
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_right, 0)
         finish()
     }
 }
