@@ -5,7 +5,9 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.GoToRute" parent="Base.Theme.GoToRute" />
+    <style name="Theme.GoToRute" parent="Base.Theme.GoToRute">
+        <item name="colorPrimary">@color/custom_primary</item>
+    </style>
 
     <style name="CustomBottomSheetDragHandleView" parent="Widget.Material3.BottomSheet.DragHandle">
         <item name="android:paddingBottom">0dp</item>

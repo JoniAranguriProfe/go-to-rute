@@ -8,4 +8,5 @@
     <string name="permission_denied_message">The app needs location permissions, please enable location access in settings</string>
     <string name="cannot_get_current_location">We cannot get current position, try again later</string>
     <string name="check_user_position_service_description">Service used to check if the current position is out of current route</string>
+    <string name="weather_report_title">Weather Report</string>
 </resources>
