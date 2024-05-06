@@ -13,6 +13,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.educacionit.gotorute.R
@@ -23,6 +24,9 @@ import com.educacionit.gotorute.home.model.maps.Place
 import com.educacionit.gotorute.home.presenter.maps.NavigatePresenter
 import com.educacionit.gotorute.ui.components.CustomSearchView
 import com.educacionit.gotorute.utils.MapsManager
+import com.educacionit.gotorute.weather_report.view.WeatherReportActivity
+import com.educacionit.gotorute.weather_report.view.WeatherReportActivity.Companion.LATITUDE_EXTRA
+import com.educacionit.gotorute.weather_report.view.WeatherReportActivity.Companion.LONGITUDE_EXTRA
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -40,6 +44,7 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
     private lateinit var navigatePresenter: NavigateContract.IFragmentNavigatePresenter<NavigateContract.NavigateView<BaseContract.IBaseView>>
     private lateinit var googleMap: GoogleMap
     private var locationState: LocationState = LocationNotGranted
+    private lateinit var weatherButton: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +54,7 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
 
         val bottomSheet = view.findViewById<View>(R.id.standard_bottom_sheet)
         placesSearchView = view.findViewById(R.id.places_search_view)
+        weatherButton = view.findViewById(R.id.weather_button)
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.isHideable = false
@@ -73,8 +79,26 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         })
+        configureWeatherButton()
         initPresenter()
         initMap()
+    }
+
+    private fun configureWeatherButton() {
+        weatherButton.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                val currentPosition = navigatePresenter.getCurrentPointPosition()
+                val weatherIntent = Intent(context, WeatherReportActivity::class.java)
+                weatherIntent.putExtra(LATITUDE_EXTRA, currentPosition?.latitude.toString())
+                weatherIntent.putExtra(
+                    LONGITUDE_EXTRA,
+                    currentPosition?.longitude.toString()
+                )
+                startActivity(weatherIntent)
+                activity?.overridePendingTransition(R.anim.slide_in_bottom, 0)
+            }
+        }
+
     }
 
     override fun initPresenter() {
