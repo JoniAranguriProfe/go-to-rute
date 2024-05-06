@@ -31,6 +31,7 @@ class NavigateRepository : NavigateContract.NavigateModel {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private lateinit var newLocationListener: WeakReference<OnNewLocationListener>
+    private var arriveDestinationListener: OnArriveDestinationListener? = null
     private var routeCheckServiceConnection: ServiceConnection? = null
     private var isServiceBound = false
     private var routeCheckService: RouteCheckService? = null
@@ -108,6 +109,10 @@ class NavigateRepository : NavigateContract.NavigateModel {
         }
     }
 
+    override fun setArriveDestinationListener(arriveDestinationListener: OnArriveDestinationListener?) {
+        this.arriveDestinationListener = arriveDestinationListener
+    }
+
     override fun registerRouteNavigationAlarm(context: Context?) {
         context?.let { safeContext ->
             alarmManager =
@@ -176,6 +181,12 @@ class NavigateRepository : NavigateContract.NavigateModel {
 
                 }
                 )
+                routeCheckService?.setArriveDestinationListener(object :
+                    RouteCheckService.OnArriveDestinationListener {
+                    override fun onArriveDestination() {
+                        arriveDestinationListener?.onArriveDestination()
+                    }
+                })
                 isServiceBound = true
             }
 
@@ -192,6 +203,10 @@ class NavigateRepository : NavigateContract.NavigateModel {
 
     interface OnNewLocationListener {
         fun currentLocationUpdate(point: Point)
+    }
+
+    interface OnArriveDestinationListener {
+        fun onArriveDestination()
     }
 
     companion object {

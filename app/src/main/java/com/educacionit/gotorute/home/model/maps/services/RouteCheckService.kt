@@ -24,6 +24,7 @@ class RouteCheckService : Service() {
     private var routeCheckJob: Job? = null
     private val checkIntervalMs = 5000L
     private var locationProvider: CurrentLocationStatusProvider? = null
+    private var arriveDestinationListener: OnArriveDestinationListener? = null
     private var notificationShown = false
 
     override fun onCreate() {
@@ -34,6 +35,10 @@ class RouteCheckService : Service() {
 
     fun setLocationProvider(locationProvider: CurrentLocationStatusProvider) {
         this.locationProvider = locationProvider
+    }
+
+    fun setArriveDestinationListener(arriveDestinationListener: OnArriveDestinationListener) {
+        this.arriveDestinationListener = arriveDestinationListener
     }
 
     override fun onDestroy() {
@@ -57,9 +62,27 @@ class RouteCheckService : Service() {
                     showNotification()
                     stopSelf()
                 }
+                if (arrivedToDestination()) {
+                    arriveDestinationListener?.onArriveDestination()
+                    stopSelf()
+                }
                 delay(checkIntervalMs)
             }
         }
+    }
+
+    private fun arrivedToDestination(): Boolean {
+        return locationProvider?.let {
+            val currentLocation = it.getCurrentLocation()
+            val currentRoute = it.getCurrentRoute()
+            return currentRoute?.let {
+                currentLocation?.let {
+                    val distance =
+                        MapsManager.calculateDistance(currentLocation, currentRoute.last())
+                    distance < DISTANCE_TO_ARRIVE
+                }
+            } ?: false
+        } ?: false
     }
 
     private fun stopRouteCheck() {
@@ -96,4 +119,11 @@ class RouteCheckService : Service() {
         fun getCurrentRoute(): List<Point>?
     }
 
+    interface OnArriveDestinationListener {
+        fun onArriveDestination()
+    }
+
+    companion object {
+        const val DISTANCE_TO_ARRIVE = 10
+    }
 }

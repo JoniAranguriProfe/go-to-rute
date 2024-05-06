@@ -128,6 +128,12 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
 
     override fun startNavigation() {
         navigateView.getParentView()?.getViewContext()?.let { safeContext ->
+            navigateModel.setArriveDestinationListener(object : NavigateRepository.OnArriveDestinationListener{
+                override fun onArriveDestination() {
+                    stopCurrentNavigation()
+                    navigateView.openCongratsScreen()
+                }
+            })
             navigateModel.startCheckingDistanceToRoute(safeContext)
             navigateModel.registerRouteNavigationAlarm(safeContext)
             navigateModel.startCheckingBatteryStatus(safeContext)
@@ -140,6 +146,7 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
                 navigateModel.stopCheckingDistanceToRoute(safeContext)
                 navigateModel.removeNavigationAlarm(safeContext)
                 navigateModel.stopCheckingBatteryStatus(safeContext)
+                navigateModel.setArriveDestinationListener(null)
             }
         }
     }
