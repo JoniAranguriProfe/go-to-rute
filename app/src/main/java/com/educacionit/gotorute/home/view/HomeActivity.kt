@@ -11,18 +11,22 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.educacionit.gotorute.R
 import com.educacionit.gotorute.contract.BaseContract
+import com.educacionit.gotorute.contract.HomeContract
+import com.educacionit.gotorute.contract.NavigateContract
 import com.educacionit.gotorute.home.model.maps.NavigateRepository.Companion.ACTION_NAVIGATION_ALARM
+import com.educacionit.gotorute.home.model.maps.Place
 import com.educacionit.gotorute.home.view.favorites.MyRoutesFragment
 import com.educacionit.gotorute.home.view.maps.NavigateFragment
 import com.educacionit.gotorute.home.view.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class HomeActivity : AppCompatActivity(), BaseContract.IBaseView {
+class HomeActivity : AppCompatActivity(), HomeContract.HomeView {
 
     private lateinit var navigateFragment: Fragment
     private lateinit var profileFragment: Fragment
     private lateinit var myRoutesFragment: Fragment
+    private lateinit var bottomNavigationView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,6 +36,7 @@ class HomeActivity : AppCompatActivity(), BaseContract.IBaseView {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
         configureViews()
         handleIntent(intent)
     }
@@ -63,7 +68,6 @@ class HomeActivity : AppCompatActivity(), BaseContract.IBaseView {
         myRoutesFragment = MyRoutesFragment()
         loadFragment(navigateFragment)
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_my_routes -> {
@@ -92,6 +96,13 @@ class HomeActivity : AppCompatActivity(), BaseContract.IBaseView {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.home_container, fragment)
         transaction.commit()
+    }
+
+    override fun openMapsScreenWithDestination(destinationPlace: Place) {
+        bottomNavigationView.selectedItemId = R.id.menu_navigate
+        (navigateFragment as? NavigateContract.NavigateView<*>)?.loadRouteFromFavorites(
+            destinationPlace
+        )
     }
 
     override fun showErrorMessage(message: String) {

@@ -135,6 +135,10 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
         }
     }
 
+    override fun loadRouteFromFavorites(destinationPlace: Place) {
+        navigatePresenter.getRouteToPlace(destinationPlace)
+    }
+
     override fun onMapReady(updatedMap: GoogleMap) {
         googleMap = updatedMap
         checkLocationsPermissions()

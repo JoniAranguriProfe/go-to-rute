@@ -9,18 +9,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.educacionit.gotorute.R
 import com.educacionit.gotorute.congrats_route.model.db.entities.FavoriteRoute
-import com.educacionit.gotorute.contract.BaseContract
 import com.educacionit.gotorute.contract.FavoritesContract
+import com.educacionit.gotorute.contract.HomeContract
 import com.educacionit.gotorute.home.model.favorites.FavoritesRepository
-import com.educacionit.gotorute.home.model.maps.NavigateRepository
 import com.educacionit.gotorute.home.presenter.favorites.FavoritesPresenter
-import com.educacionit.gotorute.home.presenter.maps.NavigatePresenter
 import com.educacionit.gotorute.home.view.favorites.adapters.FavoritesAdapter
 
-class MyRoutesFragment : Fragment(), FavoritesContract.FavoritesView<BaseContract.IBaseView> {
+class MyRoutesFragment : Fragment(), FavoritesContract.FavoritesView<HomeContract.HomeView> {
     private lateinit var favoritesRecyclerView: RecyclerView
     private lateinit var favoritesAdapter: FavoritesAdapter
-    private lateinit var favoritesPresenter: FavoritesContract.IFavoritesPresenter<FavoritesContract.FavoritesView<BaseContract.IBaseView>>
+    private lateinit var favoritesPresenter: FavoritesContract.IFavoritesPresenter<FavoritesContract.FavoritesView<HomeContract.HomeView>>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,7 +30,14 @@ class MyRoutesFragment : Fragment(), FavoritesContract.FavoritesView<BaseContrac
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        favoritesAdapter = FavoritesAdapter()
+        favoritesAdapter = FavoritesAdapter(object : FavoritesAdapter.OnFavoriteItemClickListener {
+            override fun onFavoriteItemClicked(favoriteRoute: FavoriteRoute) {
+                getParentView()?.let {
+                    it.openMapsScreenWithDestination(destinationPlace = favoriteRoute.destinationPlace)
+                }
+            }
+
+        })
         favoritesRecyclerView.layoutManager = LinearLayoutManager(context)
         favoritesRecyclerView.adapter = favoritesAdapter
         initPresenter()
@@ -42,8 +47,8 @@ class MyRoutesFragment : Fragment(), FavoritesContract.FavoritesView<BaseContrac
         favoritesAdapter.setData(favorites)
     }
 
-    override fun getParentView(): BaseContract.IBaseView? {
-        return activity as? BaseContract.IBaseView
+    override fun getParentView(): HomeContract.HomeView? {
+        return activity as? HomeContract.HomeView
     }
 
     override fun initPresenter() {

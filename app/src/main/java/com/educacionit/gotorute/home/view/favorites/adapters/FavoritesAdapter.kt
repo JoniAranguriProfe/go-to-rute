@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.educacionit.gotorute.R
 import com.educacionit.gotorute.congrats_route.model.db.entities.FavoriteRoute
 
-class FavoritesAdapter :
+class FavoritesAdapter(private val listener: OnFavoriteItemClickListener) :
     RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder>() {
     private var favorites: List<FavoriteRoute> = listOf()
 
@@ -16,6 +16,7 @@ class FavoritesAdapter :
         this.favorites = routes
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.favorite_card_item, parent, false)
@@ -27,6 +28,9 @@ class FavoritesAdapter :
         holder.startTextView.text = item.startPlace.displayName
         holder.destinationTextView.text = item.destinationPlace.getFormattedName()
         holder.dateTextView.text = item.date
+        holder.itemView.setOnClickListener {
+            listener.onFavoriteItemClicked(item)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -37,5 +41,9 @@ class FavoritesAdapter :
         val startTextView: TextView = itemView.findViewById(R.id.text_origin)
         val destinationTextView: TextView = itemView.findViewById(R.id.text_destination)
         val dateTextView: TextView = itemView.findViewById(R.id.text_date)
+    }
+
+    interface OnFavoriteItemClickListener {
+        fun onFavoriteItemClicked(favoriteRoute: FavoriteRoute)
     }
 }
