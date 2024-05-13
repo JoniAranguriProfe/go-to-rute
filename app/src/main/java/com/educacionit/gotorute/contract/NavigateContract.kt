@@ -1,6 +1,7 @@
 package com.educacionit.gotorute.contract
 
 import android.content.Context
+import android.os.Bundle
 import com.educacionit.gotorute.home.model.maps.NavigateRepository
 import com.educacionit.gotorute.home.model.maps.Place
 import com.educacionit.gotorute.home.model.maps.Point
@@ -10,7 +11,9 @@ interface NavigateContract {
     interface NavigateView<T : BaseContract.IBaseView> : FragmentBaseContract.IFragmentBaseView<T> {
         fun showSearchResults(placeResults: List<Place>)
         fun drawRoute(route: List<LatLng>)
-        fun openCongratsScreen()
+        fun openCongratsScreen(congratsParams: Bundle)
+        fun loadRouteFromFavorites(destinationPlace: Place)
+        fun clearRoute()
     }
 
     interface IFragmentNavigatePresenter<T : FragmentBaseContract.IFragmentBaseView<*>> :

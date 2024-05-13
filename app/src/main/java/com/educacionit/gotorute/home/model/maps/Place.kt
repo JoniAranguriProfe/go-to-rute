@@ -1,6 +1,10 @@
 package com.educacionit.gotorute.home.model.maps
 
+import java.io.Serializable
+
 data class Place(
-    val displayName: String,
+    var displayName: String,
     val point: Point
-)
+) : Serializable {
+    fun getFormattedName() = displayName.split(",").take(3).joinToString(",")
+}

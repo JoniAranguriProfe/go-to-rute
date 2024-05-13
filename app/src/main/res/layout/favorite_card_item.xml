@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favorite_card"
+    style="?attr/materialCardViewElevatedStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="24dp"
+    android:background="@color/black"
+    android:checkable="true"
+    android:clickable="true"
+    android:focusable="true"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/congrats_title">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <ImageView
+            android:id="@+id/icon_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/location"
+            app:layout_constraintBottom_toBottomOf="@+id/text_origin"
+            app:layout_constraintEnd_toStartOf="@+id/text_origin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_origin" />
+
+        <TextView
+            android:id="@+id/text_origin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/text_destination"
+            app:layout_constraintEnd_toStartOf="@+id/save_favorite_button"
+            app:layout_constraintStart_toEndOf="@+id/icon_location"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Bernardino Escribano 6024, Virrey del pino, Buenos Aires Argentina" />
+
+        <View
+            android:id="@+id/point_line_bottom"
+            android:layout_width="2dp"
+            android:layout_height="0dp"
+            android:alpha="0.14"
+            android:background="@drawable/dotted_line"
+            android:padding="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/icon_directions"
+            app:layout_constraintEnd_toEndOf="@id/icon_directions"
+            app:layout_constraintStart_toStartOf="@id/icon_location"
+            app:layout_constraintTop_toBottomOf="@id/icon_location" />
+
+
+        <ImageView
+            android:id="@+id/icon_directions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/directions"
+            app:layout_constraintBottom_toBottomOf="@+id/text_destination"
+            app:layout_constraintEnd_toStartOf="@+id/text_destination"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_destination" />
+
+        <TextView
+            android:id="@+id/text_destination"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/text_date"
+            app:layout_constraintEnd_toStartOf="@+id/save_favorite_button"
+            app:layout_constraintStart_toEndOf="@+id/icon_directions"
+            app:layout_constraintTop_toBottomOf="@+id/text_origin"
+            tools:text="Eizaguirre 2173, San Justo, La Matanza, Buenos Aires" />
+
+        <TextView
+            android:id="@+id/text_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/save_favorite_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_destination"
+            tools:text="23-06-2024" />
+
+        <ImageButton
+            android:id="@+id/save_favorite_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/favorite_red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/text_origin"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -94,6 +94,7 @@ class NavigateRepository : NavigateContract.NavigateModel {
         routeCheckServiceConnection?.let {
             context.unbindService(it)
         }
+        routeCheckServiceConnection = null
         isServiceBound = false
     }
 
@@ -107,6 +108,7 @@ class NavigateRepository : NavigateContract.NavigateModel {
         batteryLowReceiver?.let {
             safeContext.unregisterReceiver(it)
         }
+        batteryLowReceiver = null
     }
 
     override fun setArriveDestinationListener(arriveDestinationListener: OnArriveDestinationListener?) {
