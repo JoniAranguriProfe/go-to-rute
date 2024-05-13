@@ -49,13 +49,17 @@ object MapsManager {
     }
 
     fun addRouteToMap(safeContext: Context, googleMap: GoogleMap, route: List<LatLng>) {
-        currentRoute?.remove()
+        clearCurrentRoute()
         val polylineOptions = PolylineOptions()
             .addAll(route)
             .startCap(CustomCap(BitmapDescriptorFactory.fromResource(R.drawable.map_arrow), 50f))
             .color(safeContext.getColor(R.color.violet_primary))
             .width(30f)
         currentRoute = googleMap.addPolyline(polylineOptions)
+    }
+
+    fun clearCurrentRoute(){
+        currentRoute?.remove()
     }
 
     fun alignMapToRoute(googleMap: GoogleMap, route: List<LatLng>) {

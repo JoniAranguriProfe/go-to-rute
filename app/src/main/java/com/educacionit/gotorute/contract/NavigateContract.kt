@@ -13,6 +13,7 @@ interface NavigateContract {
         fun drawRoute(route: List<LatLng>)
         fun openCongratsScreen(congratsParams: Bundle)
         fun loadRouteFromFavorites(destinationPlace: Place)
+        fun clearRoute()
     }
 
     interface IFragmentNavigatePresenter<T : FragmentBaseContract.IFragmentBaseView<*>> :

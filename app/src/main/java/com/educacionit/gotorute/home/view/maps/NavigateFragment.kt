@@ -46,6 +46,7 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
     private lateinit var googleMap: GoogleMap
     private var locationState: LocationState = LocationNotGranted
     private lateinit var weatherButton: ImageButton
+    private lateinit var cancelRouteButton: ImageButton
     private var comesFromSettings = false
 
     override fun onCreateView(
@@ -57,6 +58,7 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
         val bottomSheet = view.findViewById<View>(R.id.standard_bottom_sheet)
         placesSearchView = view.findViewById(R.id.places_search_view)
         weatherButton = view.findViewById(R.id.weather_button)
+        cancelRouteButton = view.findViewById(R.id.cancel_route_button)
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.isHideable = false
@@ -82,8 +84,15 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
             }
         })
         configureWeatherButton()
+        configureCancelRouteButton()
         initPresenter()
         initMap()
+    }
+
+    private fun configureCancelRouteButton() {
+        cancelRouteButton.setOnClickListener {
+            navigatePresenter.stopCurrentNavigation()
+        }
     }
 
     private fun configureWeatherButton() {
@@ -137,6 +146,10 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
 
     override fun loadRouteFromFavorites(destinationPlace: Place) {
         navigatePresenter.getRouteToPlace(destinationPlace)
+    }
+
+    override fun clearRoute() {
+        MapsManager.clearCurrentRoute()
     }
 
     override fun onMapReady(updatedMap: GoogleMap) {

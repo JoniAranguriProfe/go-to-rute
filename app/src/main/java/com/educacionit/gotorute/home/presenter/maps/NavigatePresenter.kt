@@ -146,12 +146,18 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
     }
 
     override fun stopCurrentNavigation() {
-        if (navigationState is NavigationStarted) {
-            navigateView.getParentView()?.getViewContext()?.let { safeContext ->
-                navigateModel.stopCheckingDistanceToRoute(safeContext)
-                navigateModel.removeNavigationAlarm(safeContext)
-                navigateModel.stopCheckingBatteryStatus(safeContext)
-                navigateModel.setArriveDestinationListener(null)
+        CoroutineScope(Dispatchers.IO).launch {
+            if (navigationState is NavigationStarted) {
+                navigationState = NotNavigating
+                withContext(Dispatchers.Main) {
+                    navigateView.clearRoute()
+                }
+                navigateView.getParentView()?.getViewContext()?.let { safeContext ->
+                    navigateModel.stopCheckingDistanceToRoute(safeContext)
+                    navigateModel.removeNavigationAlarm(safeContext)
+                    navigateModel.stopCheckingBatteryStatus(safeContext)
+                    navigateModel.setArriveDestinationListener(null)
+                }
             }
         }
     }
