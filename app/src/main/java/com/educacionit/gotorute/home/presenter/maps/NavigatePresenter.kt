@@ -1,6 +1,9 @@
 package com.educacionit.gotorute.home.presenter.maps
 
+import android.os.Bundle
 import com.educacionit.gotorute.R
+import com.educacionit.gotorute.congrats_route.view.CongratsRouteActivity.Companion.EXTRA_DESTINATION_PLACE
+import com.educacionit.gotorute.congrats_route.view.CongratsRouteActivity.Companion.EXTRA_START_PLACE
 import com.educacionit.gotorute.contract.BaseContract
 import com.educacionit.gotorute.contract.NavigateContract
 import com.educacionit.gotorute.home.model.maps.NavigateRepository
@@ -48,7 +51,7 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
                     LatLng(it.latitude, it.longitude)
                 }
                 withContext(Dispatchers.Main) {
-                    navigationState = NavigationStarted(route = route)
+                    navigationState = NavigationStarted(route = route, destinationPlace.displayName)
                     startNavigation()
                     navigateView.drawRoute(route)
                 }
@@ -128,10 +131,12 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
 
     override fun startNavigation() {
         navigateView.getParentView()?.getViewContext()?.let { safeContext ->
-            navigateModel.setArriveDestinationListener(object : NavigateRepository.OnArriveDestinationListener{
+            navigateModel.setArriveDestinationListener(object :
+                NavigateRepository.OnArriveDestinationListener {
                 override fun onArriveDestination() {
+                    val congratsParams = getCongratsParams()
                     stopCurrentNavigation()
-                    navigateView.openCongratsScreen()
+                    navigateView.openCongratsScreen(congratsParams)
                 }
             })
             navigateModel.startCheckingDistanceToRoute(safeContext)
@@ -141,7 +146,7 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
     }
 
     override fun stopCurrentNavigation() {
-        if(navigationState is NavigationStarted){
+        if (navigationState is NavigationStarted) {
             navigateView.getParentView()?.getViewContext()?.let { safeContext ->
                 navigateModel.stopCheckingDistanceToRoute(safeContext)
                 navigateModel.removeNavigationAlarm(safeContext)
@@ -149,6 +154,31 @@ class NavigatePresenter(private val navigateModel: NavigateContract.NavigateMode
                 navigateModel.setArriveDestinationListener(null)
             }
         }
+    }
+
+    fun getCongratsParams(): Bundle {
+        val congratsParams = Bundle()
+        if (navigationState is NavigationStarted) {
+            (navigationState as NavigationStarted).apply {
+                val firstPoint = route.first()
+                val lastPoint = route.last()
+                congratsParams.putSerializable(
+                    EXTRA_START_PLACE,
+                    Place(
+                        displayName = "Punto inicial",
+                        point = Point(firstPoint.latitude, firstPoint.longitude)
+                    )
+                )
+                congratsParams.putSerializable(
+                    EXTRA_DESTINATION_PLACE,
+                    Place(
+                        displayName = destinationName,
+                        point = Point(lastPoint.latitude, lastPoint.longitude)
+                    )
+                )
+            }
+        }
+        return congratsParams
     }
 
     companion object {

@@ -10,4 +10,6 @@
     <string name="check_user_position_service_description">Service used to check if the current position is out of current route</string>
     <string name="weather_report_title">Weather Report</string>
     <string name="congrats_title_message">Felicitaciones! Llegaste a tu destino</string>
+    <string name="favorite_congrats_title">Si te gustó está ruta, guardala en tus favoritos!</string>
+    <string name="place_name_hint">Enter Place Name</string>
 </resources>

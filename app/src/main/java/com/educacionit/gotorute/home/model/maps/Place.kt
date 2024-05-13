@@ -1,6 +1,8 @@
 package com.educacionit.gotorute.home.model.maps
 
+import java.io.Serializable
+
 data class Place(
-    val displayName: String,
+    var displayName: String,
     val point: Point
-)
+) : Serializable

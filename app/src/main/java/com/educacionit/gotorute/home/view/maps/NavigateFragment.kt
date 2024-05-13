@@ -127,9 +127,10 @@ class NavigateFragment : Fragment(), OnMapReadyCallback,
         }
     }
 
-    override fun openCongratsScreen() {
+    override fun openCongratsScreen(congratsParams: Bundle) {
         context?.let {
             val congratsIntent = Intent(it, CongratsRouteActivity::class.java)
+            congratsIntent.putExtras(congratsParams)
             startActivity(congratsIntent)
         }
     }
