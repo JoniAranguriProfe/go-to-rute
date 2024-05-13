@@ -5,4 +5,6 @@ import java.io.Serializable
 data class Place(
     var displayName: String,
     val point: Point
-) : Serializable
+) : Serializable {
+    fun getFormattedName() = displayName.split(",").take(3).joinToString(",")
+}

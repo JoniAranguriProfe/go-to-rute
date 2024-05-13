@@ -12,4 +12,5 @@
     <string name="congrats_title_message">Felicitaciones! Llegaste a tu destino</string>
     <string name="favorite_congrats_title">Si te gustó está ruta, guardala en tus favoritos!</string>
     <string name="place_name_hint">Enter Place Name</string>
+    <string name="my_favorites_routes_title">Mis rutas guardadas</string>
 </resources>

@@ -13,6 +13,18 @@ import java.util.Date
 import java.util.Locale
 
 class CongratsRepository(context: Context) : CongratsContract.CongratsModel {
+
+    private lateinit var favoritesDao: FavoritesDao
+
+    init {
+        try {
+            val db = Room.databaseBuilder(context, FavoritesDatabase::class.java, DB_NAME).build()
+            favoritesDao = db.favoritesDao()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     override suspend fun saveFavoriteRoute(startPlace: Place, destinationPlace: Place, date: String) : ResultDBOperation{
         return addFavorite(
             FavoriteRoute(
@@ -30,19 +42,6 @@ class CongratsRepository(context: Context) : CongratsContract.CongratsModel {
         )
         return deleteFavorite(favoriteRouteToDelete)
     }
-
-    private lateinit var favoritesDao: FavoritesDao
-
-    init {
-        try {
-            val db = Room.databaseBuilder(context, FavoritesDatabase::class.java, DB_NAME).build()
-            favoritesDao = db.favoritesDao()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    suspend fun getFavorites(): List<FavoriteRoute> = favoritesDao.getFavorites()
 
     suspend fun addFavorite(favorite: FavoriteRoute): ResultDBOperation = try {
         favoritesDao.addFavorite(favorite)

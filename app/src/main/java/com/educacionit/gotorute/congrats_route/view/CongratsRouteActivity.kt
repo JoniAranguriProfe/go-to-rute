@@ -70,8 +70,7 @@ class CongratsRouteActivity : AppCompatActivity(), CongratsContract.CongratsView
             congratsPresenter.saveFavoriteRoute(startPlace, destinationPlace, isFavorite)
         }
         textOriginRoute.text = startPlace?.displayName
-        textDestinationRoute.text =
-            destinationPlace?.displayName?.split(",")?.take(3)?.joinToString(",") ?: ""
+        textDestinationRoute.text = destinationPlace?.getFormattedName()
         textDate.text = congratsPresenter.getCurrentDateFormatted()
     }
 
