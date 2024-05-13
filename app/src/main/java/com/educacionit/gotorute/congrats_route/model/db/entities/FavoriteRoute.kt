@@ -13,7 +13,7 @@ data class FavoriteRoute(
     @ColumnInfo(name = COLUMN_DESTINATION_PLACE)
     val destinationPlace: Place,
     @ColumnInfo(name = COLUMN_DATE)
-    val date: String
+    val date: String = ""
 ){
     @PrimaryKey
     @ColumnInfo(name = COLUMN_ID)

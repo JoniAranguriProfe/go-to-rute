@@ -63,16 +63,15 @@ class CongratsRouteActivity : AppCompatActivity(), CongratsContract.CongratsView
             isFavorite = !isFavorite
             configureIconButton()
 
-            if (isFavorite) {
-                if (startPointName == "") {
-                    showPlaceNameDialog()
-                    return@setOnClickListener
-                }
-                congratsPresenter.saveFavoriteRoute(startPlace, destinationPlace)
+            if (startPointName == "") {
+                showPlaceNameDialog()
+                return@setOnClickListener
             }
+            congratsPresenter.saveFavoriteRoute(startPlace, destinationPlace, isFavorite)
         }
         textOriginRoute.text = startPlace?.displayName
-        textDestinationRoute.text = destinationPlace?.displayName?.split(",")?.take(3)?.joinToString(",")?:""
+        textDestinationRoute.text =
+            destinationPlace?.displayName?.split(",")?.take(3)?.joinToString(",") ?: ""
         textDate.text = congratsPresenter.getCurrentDateFormatted()
     }
 
@@ -93,7 +92,7 @@ class CongratsRouteActivity : AppCompatActivity(), CongratsContract.CongratsView
                 startPointName = editTextPlaceName.text.toString()
                 startPlace?.displayName = startPointName
                 textOriginRoute.text = startPointName
-                congratsPresenter.saveFavoriteRoute(startPlace, destinationPlace)
+                congratsPresenter.saveFavoriteRoute(startPlace, destinationPlace, isFavorite)
                 dialog.dismiss()
             }
             .setNegativeButton("Cancelar") { dialog, _ ->
@@ -125,10 +124,10 @@ class CongratsRouteActivity : AppCompatActivity(), CongratsContract.CongratsView
     }
 
 
-    override fun notifyFavoriteSaved() {
+    override fun notifyFavoriteAction(message: String) {
         Toast.makeText(
             this,
-            "Tu ruta se a guardado en favoritos correctamente!",
+            message,
             Toast.LENGTH_SHORT
         ).show()
     }

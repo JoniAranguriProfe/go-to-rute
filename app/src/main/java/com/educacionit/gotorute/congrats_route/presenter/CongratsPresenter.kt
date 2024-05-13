@@ -21,12 +21,25 @@ class CongratsPresenter(private val congratsModel: CongratsContract.CongratsMode
         congratsView = view
     }
 
-    override fun saveFavoriteRoute(startPlace: Place?, destinationPlace: Place?) {
+    override fun saveFavoriteRoute(startPlace: Place?, destinationPlace: Place?, isAdd: Boolean) {
         CoroutineScope(Dispatchers.IO).launch {
             startPlace?.let { safeStartPlace ->
                 destinationPlace?.let { safeDestinationPlace ->
-                    congratsModel.saveFavoriteRoute(safeStartPlace, safeDestinationPlace, getCurrentDateFormatted()).let {
-                        onFavoriteSaved(it)
+                    when (isAdd) {
+                        true -> onFavoriteSaved(
+                            congratsModel.saveFavoriteRoute(
+                                safeStartPlace,
+                                safeDestinationPlace,
+                                getCurrentDateFormatted()
+                            )
+                        )
+
+                        false -> onFavoriteDeleted(
+                            congratsModel.deleteFavoriteRoute(
+                                safeStartPlace,
+                                safeDestinationPlace
+                            )
+                        )
                     }
                 }
             } ?: withContext(Dispatchers.Main) {
@@ -35,6 +48,7 @@ class CongratsPresenter(private val congratsModel: CongratsContract.CongratsMode
 
         }
     }
+
 
     override fun getCurrentDateFormatted(): String {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
@@ -45,8 +59,17 @@ class CongratsPresenter(private val congratsModel: CongratsContract.CongratsMode
     private suspend fun onFavoriteSaved(result: ResultDBOperation) {
         withContext(Dispatchers.Main) {
             when (result) {
-                ResultOk -> congratsView.notifyFavoriteSaved()
+                ResultOk -> congratsView.notifyFavoriteAction("Tu ruta se a guardado en favoritos correctamente!")
                 ResultError -> congratsView.showErrorMessage("No se pudo guardar la ruta como favorita")
+            }
+        }
+    }
+
+    private suspend fun onFavoriteDeleted(result: ResultDBOperation) {
+        withContext(Dispatchers.Main) {
+            when (result) {
+                ResultOk -> congratsView.notifyFavoriteAction("Tu ruta se eliminado de favoritos!")
+                ResultError -> congratsView.showErrorMessage("No se pudo eliminar la ruta de favoritos")
             }
         }
     }

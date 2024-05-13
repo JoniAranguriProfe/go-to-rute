@@ -14,13 +14,21 @@ import java.util.Locale
 
 class CongratsRepository(context: Context) : CongratsContract.CongratsModel {
     override suspend fun saveFavoriteRoute(startPlace: Place, destinationPlace: Place, date: String) : ResultDBOperation{
-      return addFavorite(
+        return addFavorite(
             FavoriteRoute(
                 startPlace = startPlace,
                 destinationPlace = destinationPlace,
                 date = date
             )
         )
+    }
+
+    override suspend fun deleteFavoriteRoute(startPlace: Place, destinationPlace: Place) : ResultDBOperation{
+        val favoriteRouteToDelete = FavoriteRoute(
+            startPlace = startPlace,
+            destinationPlace = destinationPlace,
+        )
+        return deleteFavorite(favoriteRouteToDelete)
     }
 
     private lateinit var favoritesDao: FavoritesDao
@@ -38,6 +46,14 @@ class CongratsRepository(context: Context) : CongratsContract.CongratsModel {
 
     suspend fun addFavorite(favorite: FavoriteRoute): ResultDBOperation = try {
         favoritesDao.addFavorite(favorite)
+        ResultOk
+    } catch (e: Exception) {
+        e.printStackTrace()
+        ResultError
+    }
+
+    suspend fun deleteFavorite(favorite: FavoriteRoute): ResultDBOperation = try {
+        favoritesDao.deleteFavorite(favorite)
         ResultOk
     } catch (e: Exception) {
         e.printStackTrace()
