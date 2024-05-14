@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import com.educacionit.gotorute.BuildConfig
 import com.educacionit.gotorute.R
 import com.educacionit.gotorute.contract.LoginContract
 import com.educacionit.gotorute.home.view.HomeActivity
@@ -23,6 +24,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.LoginView {
         setContentView(R.layout.activity_login)
         initPresenter()
         initViews()
+        println(BuildConfig.IS_DEBUG)
     }
 
     private fun initViews() {
