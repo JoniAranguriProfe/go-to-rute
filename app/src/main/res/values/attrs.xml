@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="ProfileSection">
+        <attr name="iconResource" format="reference" />
+        <attr name="itemTitle" format="reference" />
+        <attr name="details" format="reference" />
+    </declare-styleable>
+</resources>

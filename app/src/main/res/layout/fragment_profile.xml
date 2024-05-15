@@ -1,13 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".home.view.profile.ProfileFragment">
+    android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Fragment profile" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        tools:context=".home.view.profile.ProfileFragment">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/profile_screen_title"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/white"
+            android:checkable="true"
+            android:clickable="true"
+            android:focusable="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/profile_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/fake_name"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/profile_email"
+                    app:layout_constraintStart_toEndOf="@+id/profile_image"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:text="@string/fake_name" />
+
+                <TextView
+                    android:id="@+id/profile_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/fake_email"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/profile_image"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_name"
+                    tools:text="@string/fake_email" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/white"
+            android:focusable="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:padding="16dp"
+                    android:text="@string/general_card_title"
+                    android:textColor="@color/gray"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.educacionit.gotorute.ui.components.ProfileSection
+                    android:id="@+id/edit_profile_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:details="@string/profile_settings_edit_profile_details"
+                    app:iconResource="@drawable/ic_profile"
+                    app:itemTitle="@string/profile_settings_edit_profile" />
+
+                <com.educacionit.gotorute.ui.components.ProfileSection
+                    android:id="@+id/change_password_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:details="@string/profile_settings_change_password_details"
+                    app:iconResource="@drawable/ic_case"
+                    app:itemTitle="@string/profile_settings_change_password" />
+
+                <com.educacionit.gotorute.ui.components.ProfileSection
+                    android:id="@+id/terms_of_use_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:details="@string/profile_settings_terms_of_use_details"
+                    app:iconResource="@drawable/ic_shield"
+                    app:itemTitle="@string/profile_settings_terms_of_use" />
+
+                <com.educacionit.gotorute.ui.components.ProfileSection
+                    android:id="@+id/add_card_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:details="@string/profile_settings_add_card_details"
+                    app:iconResource="@drawable/ic_card"
+                    app:itemTitle="@string/profile_settings_add_card" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/white"
+            android:focusable="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:padding="16dp"
+                    android:text="@string/preferences_title"
+                    android:textColor="@color/gray"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.educacionit.gotorute.ui.components.ProfileSection
+                    android:id="@+id/notifications_profile_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:details="@string/profile_settings_notification_details"
+                    app:iconResource="@drawable/ic_bell"
+                    app:itemTitle="@string/profile_settings_notification" />
+
+                <com.educacionit.gotorute.ui.components.ProfileSection
+                    android:id="@+id/faq_profile_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:details="@string/profile_settings_faq_details"
+                    app:iconResource="@drawable/ic_warning"
+                    app:itemTitle="@string/profile_settings_faq" />
+
+                <com.educacionit.gotorute.ui.components.ProfileSection
+                    android:id="@+id/logout_profile_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:details="@string/profile_settings_logout_details"
+                    app:iconResource="@drawable/ic_logout"
+                    app:itemTitle="@string/profile_settings_logout" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </LinearLayout>
+
+</ScrollView>
