@@ -13,4 +13,23 @@
     <string name="favorite_congrats_title">Si te gustó está ruta, guardala en tus favoritos!</string>
     <string name="place_name_hint">Enter Place Name</string>
     <string name="my_favorites_routes_title">Mis rutas guardadas</string>
+    <string name="profile_screen_title">Profile Settings</string>
+    <string name="general_card_title">General</string>
+    <string name="fake_name">Scarlett Davis</string>
+    <string name="fake_email">scarlettdavis@gmail.com</string>
+    <string name="preferences_title">Preferences</string>
+    <string name="profile_settings_edit_profile">Edit Profile</string>
+    <string name="profile_settings_edit_profile_details">Change profile picture, number, E-mail</string>
+    <string name="profile_settings_change_password">Change Password</string>
+    <string name="profile_settings_change_password_details">Update and strengthen account security</string>
+    <string name="profile_settings_terms_of_use">Terms of Use</string>
+    <string name="profile_settings_terms_of_use_details">Protect your account now</string>
+    <string name="profile_settings_add_card">Add Card</string>
+    <string name="profile_settings_add_card_details">Securely add payment method</string>
+    <string name="profile_settings_notification">Notification</string>
+    <string name="profile_settings_notification_details">Customize your notifications preferences</string>
+    <string name="profile_settings_faq">FAQ</string>
+    <string name="profile_settings_faq_details">Common questions about us</string>
+    <string name="profile_settings_logout">Log Out</string>
+    <string name="profile_settings_logout_details">Securely log out of Account</string>
 </resources>
